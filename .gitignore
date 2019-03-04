@@ -1,0 +1,24 @@
+# risky secrety stuff
+database.yml
+sqs.yml
+.vscode-upload.json
+
+# local
+shoryuken.pid
+*.log
+sql/ddl/*.sql
+
+# dev stuff
+dev/
+todo.txt
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+nohup.out

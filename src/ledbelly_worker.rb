@@ -1,0 +1,191 @@
+require './src/events/canvas_raw'
+require './src/events/ims_caliper'
+require './src/ext/live_stream'
+
+class LiveEvents
+  include Shoryuken::Worker
+  include CanvasRawEvents
+  include IMSCaliperEvents
+  include LiveStream
+
+  shoryuken_options queue: SQS_CFG['queues'][0], auto_delete: true
+
+  # https://github.com/phstc/shoryuken/wiki/Worker-options#body_parser
+  shoryuken_options body_parser: :json
+  shoryuken_options body_parser: ->(sqs_msg){ REXML::Document.new(sqs_msg.body) }
+  shoryuken_options body_parser: JSON
+
+  # https://github.com/phstc/shoryuken/blob/master/lib/shoryuken/worker/inline_executor.rb#L8
+  def perform(sqs_msg, _body)
+
+    # event attributes
+    event_name = sqs_msg.message_attributes['event_name']['string_value']
+    event_time = sqs_msg.message_attributes['event_time']['string_value']
+    event_data = JSON.parse(sqs_msg.body)
+
+    begin
+      # handle caliper
+      if event_data['dataVersion'] == 'http://purl.imsglobal.org/ctx/caliper/v1p1'
+                
+        # pass to parser
+        ims_caliper(event_name, event_time, event_data)
+      
+      # handle canvas raw
+      else
+
+        # pass to parser
+        canvas_raw(event_name, event_time, event_data)
+
+        # extras
+        live_stream(event_name, event_time, event_data)
+      end
+    rescue => e
+      puts ":::::::::::::::::: #{event_name} #{event_time} \n:::::::::::::::::: #{e} \n------------------\n#{event_data.to_json}"
+      puts e.backtrace
+      raise
+    end
+  end
+
+  def import(event_name, event_time, event_data, import_data, caliper = false)
+
+    event_source = caliper == false ? 'live' : 'ims'
+    event_table = "#{event_source}_#{event_name}".gsub(/[^\w\s]/, '_')
+
+    # passively truncate strings to DDL length, keeps data insertion, logs warning for manual update
+    limit_to_ddl(event_table, import_data)
+
+    processed = Time.new
+    created = {
+      processed_at:     processed.strftime('%Y-%m-%d %H:%M:%S.%L').to_s,
+      event_time_local: Time.parse(event_time).utc.localtime.strftime(TIME_FORMAT).to_s,
+    }
+    data = import_data.merge(created)
+
+    begin
+      # insert the data
+      DB[event_table.to_sym].insert(data)
+
+      # terminal output, if terminal/interactive
+      if $stdout.isatty
+        printf("\r%s: %s\e[0J", created[:event_time_local], event_table)
+      end
+    rescue => e
+      handle_db_errors(e, event_name, event_data, import_data)
+    end
+  end
+
+  def limit_to_ddl(event_table, import_data)
+    # loop through each string value, compare length to defined (DDL) length
+    # if defined as multibyte string, check values bytesize against mb/length (defined 2 x actual byte length)
+    # https://api.rubyonrails.org/classes/ActiveSupport/Multibyte/Chars.html#method-i-limit
+    import_data.each do |k,v|
+      if v.nil?
+        next
+      end
+
+      # if !EVENT_DDL[event_table.to_sym].key?(k)
+      #   puts "\n#{event_table} #{k}"
+      #   abort
+      # end
+
+      next unless EVENT_DDL[event_table.to_sym][k][:type] == 'string' && EVENT_DDL[event_table.to_sym][k][:size] != 'MAX'
+
+      v = if EVENT_DDL[event_table.to_sym][k].key?(:mbstr)
+        # multi-byte strings
+        v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size] * 2).to_s  
+      else
+        # regular string
+        v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size]).to_s
+      end
+
+      next unless import_data[k].mb_chars.length > v.mb_chars.length
+
+      # collect warning
+      log = "#{event_table}.#{k} { supplied: #{import_data[k].mb_chars.length}, expecting: #{EVENT_DDL[event_table.to_sym][k][:size]} }"
+      # overwrite/update inserted value
+      import_data[k] = v
+      # log warning
+      open('log/sql-truncations.log', 'a') { |f| f << "#{Time.now} #{log}\n" }
+    end
+  end
+
+  def handle_db_errors(exp, event_name, event_data, import_data) 
+
+    # create a log entry
+    err = %W[
+      ---#{event_name}---\n
+      #{exp.message}\n
+      ------\n
+      #{exp.sql}\n
+      ------ import data\n
+      #{import_data}\n
+      ------ event data\n
+      #{event_data}\n
+    ]
+    # puts err
+    
+    # store in log file
+    open('log/sql-errors.log', 'a') { |f| f << "#{err}\n\n" }
+    # drop the failed SQL statement into a file
+    # we can use this file to import the records later
+    open('log/sql-recovery.log', 'a') { |f| f << "#{exp.sql};\n" }
+
+    warn_errors = [
+      # tinytds
+      'Invalid object name', # missing table
+      'Invalid column name', # missing column
+      'String or binary data would be truncated', # value larger than column definition
+      # oracle
+      'table or view does not exist', # missing table
+      'invalid identifier', # missing column
+    ]
+    if exp.message.match? Regexp.union(warn_errors)
+      puts "#{event_name} #{exp.message}"
+    end
+
+    disconnect_errors = [
+      # tinytds
+      'Adaptive Server connection timed out',
+      'Cannot continue the execution because the session is in the kill state',
+      'Login failed for user',
+      'Read from the server failed',
+      'Server name not found in configuration files',
+      'The transaction log for database',
+      'Unable to access availability database',
+      'Unable to connect: Adaptive Server is unavailable or does not exist',
+      'Write to the server failed',
+    ]
+    if exp.message.match? Regexp.union(disconnect_errors)
+      # disconnect the db
+      DB.disconnect
+
+      # terminal output, if terminal/interactive
+      if $stdout.isatty
+        puts exp.message
+      end
+
+      # kill shoryuken/ledbelly
+      shoryuken_pid = File.read('./log/shoryuken.pid').to_i
+      Process.kill('TERM', shoryuken_pid)
+    end
+  end
+
+  def collect_unknown(event_name, event_data)
+    puts "unexpected event: #{event_name}"
+    # send message to another queue for caching...?
+    puts 'storing event data in moo queue'
+    begin
+      LiveEvents.perform_async(event_data, queue: "#{SQS_CFG['queues'][0]}-moo")
+    rescue => e
+      puts e
+      puts 'moo queue failed, saving payload to file'
+      puts event_data
+      # write event and payload to file
+      open('log/payload-cache.js', 'a') do |f|
+        f << "\n//#{event_name}\n"
+        f << event_data.to_json
+      end
+    end
+  end
+
+end

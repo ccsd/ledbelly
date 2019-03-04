@@ -1,0 +1,14 @@
+# aws
+aws:
+  region: us-west-2
+  access_key_id: zxcvbnmpoiuytrewq
+  secret_access_key: asdfghjklpoiuytrewq
+
+# shoryuken
+# https://github.com/phstc/shoryuken/wiki/Shoryuken-options
+logfile: ./shoryuken.log # /dev/null #./shoryuken.log
+pidfile: ./shoryuken.pid
+concurrency: 20
+delay: 0
+queues:
+  - canvas-live-events-edu

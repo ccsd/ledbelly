@@ -1,0 +1,36 @@
+# production
+adapter: tinytds
+host: db.hostname.tld
+data: CanvasLMS
+user: cda
+pass: password
+max_connections: 10
+
+# development
+# adapter: tinytds
+# host: db.hostname.tld
+# data: CanvasLMS
+# user: cda
+# pass: password
+# max_connections: 10
+
+# adapter: mysql2
+# host: db.hostname.tld
+# data: CanvasLMS
+# user: cda
+# pass: password
+# max_connections: 10
+
+# adapter: postgres
+# host: db.hostname.tld
+# data: CanvasLMS
+# user: cda
+# pass: password
+# max_connections: 10
+
+# adapter: oracle
+# host: db.hostname.tld
+# data: CanvasLMS
+# user: cda
+# pass: password
+# max_connections: 10

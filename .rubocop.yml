@@ -1,0 +1,208 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - 'dev/**/*'
+    - 'src/lib/tasks/**/*'
+
+# our style changes: disabling style rules we aren't interested in
+Layout/AlignParameters:
+  Enabled: false
+Layout/ElseAlignment:
+  Enabled: false
+Layout/EmptyLines:
+  Enabled: false
+Layout/EmptyLinesAroundAccessModifier:
+  Enabled: false
+Layout/EmptyLinesAroundArguments:
+  Enabled: false
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+Layout/EmptyLinesAroundMethodBody:
+  Enabled: false
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+Layout/IndentArray:
+  Enabled: false
+Layout/IndentHash:
+  Enabled: false
+Layout/IndentationConsistency:
+  Enabled: false
+Layout/IndentationWidth:
+  Enabled: false
+Layout/MultilineOperationIndentation:
+  Enabled: false
+Layout/SpaceAfterColon:
+  Enabled: false
+Layout/SpaceAfterComma:
+  Enabled: false
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+Layout/SpaceAroundOperators:
+  Enabled: false
+Layout/SpaceBeforeBlockBraces:
+  Enabled: false
+Layout/SpaceBeforeFirstArg:
+  Enabled: false
+Layout/SpaceInLambdaLiteral:
+  Enabled: false
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+Layout/SpaceInsideBlockBraces:
+  Enabled: false
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+Layout/SpaceInsideReferenceBrackets:
+  Enabled: false
+Layout/TrailingBlankLines:
+  Enabled: false
+Layout/TrailingWhitespace:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+Style/StringLiterals:
+  Enabled: false
+Style/SignalException:
+  Enabled: false
+Style/NumericLiterals:
+  Enabled: false
+Style/BracesAroundHashParameters:
+  Enabled: false
+Style/PercentLiteralDelimiters:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/RegexpLiteral:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/PercentQLiterals:
+  Enabled: false
+Style/DoubleNegation:
+  Enabled: false
+Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+Layout/DotPosition:
+  Enabled: true
+  EnforcedStyle: trailing
+Layout/AlignHash:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
+Style/WhileUntilModifier:
+  Enabled: false
+Style/ParallelAssignment:
+  Enabled: false
+Style/ZeroLengthPredicate:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
+Naming/VariableNumber:
+  Enabled: false
+Style/Dir:
+  Enabled: false
+Style/ReturnNil:
+  Enabled: false
+Style/StderrPuts:
+  Enabled: false
+Style/DateTime:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
+# We may want to enable this when we start working toward Ruby 3
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: false
+Style/BlockDelimiters:
+  Enabled: true
+  Exclude:
+    - spec/**/*_spec.rb
+    - spec/shared_examples/**/*.rb
+
+# this isn't good for us because of how we pin dependencies
+Bundler/OrderedGems:
+  Enabled: false
+Gemspec/OrderedDependencies:
+  Enabled: false
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+# Lint changes
+Lint/AmbiguousRegexpLiteral:
+  Severity: convention
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*
+Lint/UselessAssignment:
+  Severity: convention
+Lint/Debugger:
+  Severity: error
+Lint/PercentStringArray:
+  Enabled: false
+
+# Performance changes
+Performance/Detect:
+  Severity: warning
+Performance/TimesMap:
+  Exclude:
+    - spec/**/*
+
+# these need better configuration than the default:
+Style/AndOr:
+  EnforcedStyle: conditionals
+Style/RescueModifier:
+  Severity: warning
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+# Layout/IndentArray:
+#   EnforcedStyle: consistent
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+  Severity: convention
+
+# these are invalid pre-Ruby 2.4
+Performance/RegexpMatch:
+  Enabled: false
+
+# Things we may want to tighten down later
+Metrics/AbcSize:
+  Enabled: false
+Metrics/LineLength:
+  Max: 200
+Metrics/MethodLength:
+  Max: 1000
+Metrics/ClassLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Metrics/BlockLength:
+  Max: 100
+  Exclude:
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Style/HashSyntax:
+  Enabled: false
+
+Style/RescueStandardError:
+  Enabled: false
