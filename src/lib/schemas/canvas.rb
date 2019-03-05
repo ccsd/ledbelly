@@ -693,7 +693,7 @@ $schema = {
     discussion_topic_id: { type: 'bigint' },
     is_announcement: { type: 'string', size: 5 },
     title: { type: 'string', size: 255, mbstr: true },
-    body: { type: 'string', size: 'MAX' },
+    body: { type: 'string', size: 'MAX', mbstr: true },
     assignment_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
     context_type: { type: 'string', size: 24 },
