@@ -58,16 +58,15 @@ Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https
 	>If PostgreSQL is installed on another system, you will need to install libpq first and then install the Ruby GEM 'pg' with options.
     >`gem install pg -v '1.0.0' -- --with-opt-dir="/usr/local/opt/libpq"`
 4) Run `bundle install`
-5) Run `rake setup`, this creates the _log_ and _sql/ddl_ directories
-6) Run `rake create_tables`, evaluate the schema files and run them against your db instance
+5) Run `rake create_tables`, evaluate the schema files and run them against your db instance
 	- You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
 	- Add schemas and manage tables for any `extensions` you use or create like __Live Stream__
-7) Start LEDbelly, from the directory root
+6) Start LEDbelly, from the directory root
     `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L /dev/null -d`
     -d flag daemonizes Shoryuken and detaches the terminal
     Note, you will get an error if you try to daemonize Shoryuken without logging, so `/dev/null` works.
     __[FAIL] You should set a logfile if you're going to daemonize__
-8) Daemonize the Daemon
+7) Daemonize the Daemon
 Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in SYSTEMD.md
 
 ### Other startup options
@@ -141,6 +140,9 @@ membership_organization_type: 'CourseOffering'
 
 ### Credits
 Many thanks to Pablo Cantero and Jeremy Evans for their open source contributions. LEDbelly would be much harder to maintain without these Gems.
+
 The name _LEDbelly_ was chosen one morning when [Huddie Ledbetter aka Lead Belly](https://en.wikipedia.org/wiki/Lead_Belly) began playing via iTunes. It seemed apropos for a _Live Events Daemon and Consumer_
-[The CCSD Canvas Team](http://obl.ccsd.net) 
+
+[The CCSD Canvas Team](http://obl.ccsd.net)
+
 ![Elvis Panda](https://s3-us-west-2.amazonaws.com/ccsd-canvas/branding/images/ccsd-elvis-panda-sm.png "Elvis Panda")

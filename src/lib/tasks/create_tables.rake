@@ -2,11 +2,10 @@ require 'yaml'
 
 task :create_tables do
 
-  db_cfg_file = File.expand_path('../../../cfg/database.yml', __dir__)
-  db_cfg = YAML.load_file(db_cfg_file)
-  adapter = db_cfg['adapter']
+  DB_CFG = YAML.load_file('./cfg/database.yml')
+  adapter = DB_CFG['adapter']
   # the name of the schema/database name... might be 'dbo' for tinytds or whatever you named the db
-  dbname = db_cfg['data']
+  dbname = DB_CFG['data']
 
   primary_keys = {
     mysql2:   'BIGINT NOT NULL AUTO_INCREMENT',
@@ -23,13 +22,14 @@ task :create_tables do
     # tables
     $schema.each do |table, columns|
       # create table
+      tbobj = [ 'mysql2', 'tinytds' ].include?(adapter) ? "#{dbname}.#{table}" : table
       if adapter == 'tinytds'
         ddlout << "IF OBJECT_ID('#{dbname}.#{table}', 'U') IS NOT NULL DROP TABLE #{dbname}.#{table};\n"
         ddlout << "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = '#{table}' AND xtype = 'U')\n"
       else
-        ddlout << "DROP TABLE IF EXISTS #{dbname}.#{table};\n"
+        ddlout << "DROP TABLE IF EXISTS #{tbobj};\n"
       end
-      ddlout << "CREATE TABLE #{dbname}.#{table} (\n"
+      ddlout << "CREATE TABLE #{tbobj} (\n"
 
       # columns
       colout = []
