@@ -45,7 +45,32 @@ Dir.glob('./src/lib/schemas/*.rb') do |schema|
   ddl_stack = ddl_stack.merge!($schema)
 end
 # then stored as a constant
-EVENT_DDL = ddl_stack
+EVENT_DDL = ddl_stack.freeze
 
 # format for all time strings
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'.freeze
+
+# broad warnings for available adapters
+WARN_ERRORS = [
+  # tinytds
+  'Invalid object name', # missing table
+  'Invalid column name', # missing column
+  'String or binary data would be truncated', # value larger than column definition
+  # oracle
+  'table or view does not exist', # missing table
+  'invalid identifier', # missing column
+].freeze
+
+# broad errors worthy of disconnecting, to preserve messages in the queue
+DISCONNECT_ERRORS = [
+  # tinytds
+  'Adaptive Server connection timed out',
+  'Cannot continue the execution because the session is in the kill state',
+  'Login failed for user',
+  'Read from the server failed',
+  'Server name not found in configuration files',
+  'The transaction log for database',
+  'Unable to access availability database',
+  'Unable to connect: Adaptive Server is unavailable or does not exist',
+  'Write to the server failed',
+].freeze

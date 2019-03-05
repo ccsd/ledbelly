@@ -1,6 +1,6 @@
-require './src/events/canvas_raw'
-require './src/events/ims_caliper'
-require './src/ext/live_stream'
+require_relative 'events/canvas_raw'
+require_relative 'events/ims_caliper'
+require_relative 'ext/live_stream'
 
 class LiveEvents
   include Shoryuken::Worker
@@ -19,8 +19,8 @@ class LiveEvents
   def perform(sqs_msg, _body)
 
     # event attributes
-    event_name = sqs_msg.message_attributes['event_name']['string_value']
-    event_time = sqs_msg.message_attributes['event_time']['string_value']
+    event_name = sqs_msg.message_attributes.dig('event_name', 'string_value')
+    event_time = sqs_msg.message_attributes.dig('event_time', 'string_value')
     event_data = JSON.parse(sqs_msg.body)
 
     begin
@@ -79,17 +79,19 @@ class LiveEvents
     # if defined as multibyte string, check values bytesize against mb/length (defined 2 x actual byte length)
     # https://api.rubyonrails.org/classes/ActiveSupport/Multibyte/Chars.html#method-i-limit
     import_data.each do |k,v|
-      if v.nil?
+      next if v.nil?
+
+      # log warnings if the key is not defined in the schema
+      unless EVENT_DDL[event_table.to_sym].key?(k)
+        log = "\nunexpected key, not found in schema : #{event_table}.#{k} -- #{v}"
+        open('log/ddl-warnings.log', 'a') { |f| f << "#{Time.now} #{log}\n" }
+        # remove the key from the hash
+        import_data.delete(k)
         next
       end
 
-      # if !EVENT_DDL[event_table.to_sym].key?(k)
-      #   puts "\n#{event_table} #{k}"
-      #   abort
-      # end
-
       next unless EVENT_DDL[event_table.to_sym][k][:type] == 'string' && EVENT_DDL[event_table.to_sym][k][:size] != 'MAX'
-
+      
       v = if EVENT_DDL[event_table.to_sym][k].key?(:mbstr)
         # multi-byte strings
         v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size] * 2).to_s  
@@ -99,7 +101,7 @@ class LiveEvents
       end
 
       next unless import_data[k].mb_chars.length > v.mb_chars.length
-
+      
       # collect warning
       log = "#{event_table}.#{k} { supplied: #{import_data[k].mb_chars.length}, expecting: #{EVENT_DDL[event_table.to_sym][k][:size]} }"
       # overwrite/update inserted value
@@ -130,42 +132,19 @@ class LiveEvents
     # we can use this file to import the records later
     open('log/sql-recovery.log', 'a') { |f| f << "#{exp.sql};\n" }
 
-    warn_errors = [
-      # tinytds
-      'Invalid object name', # missing table
-      'Invalid column name', # missing column
-      'String or binary data would be truncated', # value larger than column definition
-      # oracle
-      'table or view does not exist', # missing table
-      'invalid identifier', # missing column
-    ]
-    if exp.message.match? Regexp.union(warn_errors)
-      puts "#{event_name} #{exp.message}"
+    if exp.message.match? Regexp.union(WARN_ERRORS)
+      warn "#{event_name} #{exp.message}"
     end
 
-    disconnect_errors = [
-      # tinytds
-      'Adaptive Server connection timed out',
-      'Cannot continue the execution because the session is in the kill state',
-      'Login failed for user',
-      'Read from the server failed',
-      'Server name not found in configuration files',
-      'The transaction log for database',
-      'Unable to access availability database',
-      'Unable to connect: Adaptive Server is unavailable or does not exist',
-      'Write to the server failed',
-    ]
-    if exp.message.match? Regexp.union(disconnect_errors)
+    if exp.message.match? Regexp.union(DISCONNECT_ERRORS)
       # disconnect the db
       DB.disconnect
 
       # terminal output, if terminal/interactive
-      if $stdout.isatty
-        puts exp.message
-      end
+      warn exp.message if $stdout.isatty
 
       # kill shoryuken/ledbelly
-      shoryuken_pid = File.read('./log/shoryuken.pid').to_i
+      shoryuken_pid = File.read('log/shoryuken.pid').to_i
       Process.kill('TERM', shoryuken_pid)
     end
   end
