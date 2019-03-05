@@ -66,9 +66,7 @@ class LiveEvents
       DB[event_table.to_sym].insert(data)
 
       # terminal output, if terminal/interactive
-      if $stdout.isatty
-        printf("\r%s: %s\e[0J", created[:event_time_local], event_table)
-      end
+      printf("\r%s: %s\e[0J", created[:event_time_local], event_table) if $stdout.isatty
     rescue => e
       handle_db_errors(e, event_name, event_data, import_data)
     end
@@ -91,7 +89,7 @@ class LiveEvents
       end
 
       next unless EVENT_DDL[event_table.to_sym][k][:type] == 'string' && EVENT_DDL[event_table.to_sym][k][:size] != 'MAX'
-      
+
       v = if EVENT_DDL[event_table.to_sym][k].key?(:mbstr)
         # multi-byte strings
         v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size] * 2).to_s  
@@ -101,7 +99,7 @@ class LiveEvents
       end
 
       next unless import_data[k].mb_chars.length > v.mb_chars.length
-      
+
       # collect warning
       log = "#{event_table}.#{k} { supplied: #{import_data[k].mb_chars.length}, expecting: #{EVENT_DDL[event_table.to_sym][k][:size]} }"
       # overwrite/update inserted value
