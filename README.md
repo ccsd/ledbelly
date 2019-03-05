@@ -53,21 +53,25 @@ Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https
 	- `gem pg` for PostgreSQL*
 	- `gem ruby-oci8` for Oracle
 
-	>For SQL Server, you may need to install and configure freetds first.
-	>
-	>If PostgreSQL is installed on another system, you will need to install libpq first and then install the Ruby GEM 'pg' with options.
-    >`gem install pg -v '1.0.0' -- --with-opt-dir="/usr/local/opt/libpq"`
+
+	For SQL Server, you may need to install and configure freetds first.
+	
+	If PostgreSQL is installed on another system, you will need to install libpq first and then install the Ruby GEM 'pg' with options.
+    `gem install pg -v '1.0.0' -- --with-opt-dir="/usr/local/opt/libpq"`
 4) Run `bundle install`
 5) Run `rake create_tables`, evaluate the schema files and run them against your db instance
 	- You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
 	- Add schemas and manage tables for any `extensions` you use or create like __Live Stream__
 6) Start LEDbelly, from the directory root
+
     `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L /dev/null -d`
+    
     -d flag daemonizes Shoryuken and detaches the terminal
     Note, you will get an error if you try to daemonize Shoryuken without logging, so `/dev/null` works.
+    
     __[FAIL] You should set a logfile if you're going to daemonize__
 7) Daemonize the Daemon
-Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in SYSTEMD.md
+Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in [SYSTEMD.md](SYSTEMD.md)
 
 ### Other startup options
 terminal output __without__ _Shoryuken_ logging
