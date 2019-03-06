@@ -4,41 +4,44 @@ LEDbelly, or Live Events Daemon is powerful and lightweight middleware for consu
 
 - provides a fast multi-threaded message processor via [Shoryuken](https://github.com/phstc/shoryuken)
 - provides support and compatibility for popular databases used by the Canvas Community via [Sequel](https://github.com/jeremyevans/sequel)
-- currently supports MSSQL, MySQL, PostgreSQL, and Oracle*
+- currently supports MSSQL, MySQL, PostgreSQL, and Oracle[*](https://github.com/ccsd/ledbelly#known-issues)
+- Supports both [Canvas Raw](https://github.com/instructure/canvas-lms/blob/master/doc/api/live_events.md) and [IMS Caliper](https://github.com/instructure/canvas-lms/blob/master/doc/api/caliper_live_events.md) formats
 
-Creating an SQS Queue and receiving events is easy and relatively low cost via [AWS](https://aws.amazon.com/sqs/pricing/), but consuming and using events is a bit more complicated. Live Events are published in real-time as users or the system performs actions within Canvas. This real-time data is extremely useful for building applications and services. Event messages are published to Amazon Simple Queue Service (SQS) in JSON. Two event formats are published through CanvasLMS Data Portal, [Canvas Raw](https://github.com/instructure/canvas-lms/blob/master/doc/api/live_events.md) and the [IMS Caliper](https://github.com/instructure/canvas-lms/blob/master/doc/api/caliper_live_events.md) format. Some of the data is nested in the Canvas format, and all events are nested in the Caliper format. This creates a problem for pushing events to SQL since data isn't structured for this purpose. There are many options for software and even AWS services like Glue can do this task easily and efficiently for a price. However, using the events via SQL offers a fantastic addition to your existing Canvas Data pipeline.
+Creating an SQS Queue and receiving events is easy and relatively low cost via [AWS](https://aws.amazon.com/sqs/pricing/), but consuming and using events is a bit more complicated. Live Events are published in real-time as users or the system performs actions within Canvas. This real-time data is extremely useful for building applications and services. Event messages are published to Amazon Simple Queue Service (SQS) in JSON. Some of the data is nested in the Canvas format, and all events are nested in the Caliper format. This creates a problem for pushing events to SQL since data isn't structured for this purpose. There are many options for software and AWS services like Glue can do this easily and efficiently, for a price. However, with a little configuration and a dedicated server, LEDbelly will help you add Live Events into your existing Canvas Data pipeline.
 
-LEDbelly aims to make using Live Events Services easy and attainable to any school or institution that cannot afford more robust options and licensing costs. The products that can do this often have costs or overhead out of reach for small budgets and teams. It is designed to be easily maintained and edited for your purposes. Additional features have been implemented to aid in the continual maintenance of the program as Canvas periodically adds new events and new columns to existing events, and more improvements are coming!
+LEDbelly aims to make using Live Events Services easy and attainable to any school or institution that cannot afford more robust options and licensing costs. The products that can do this often have costs or overhead out of reach for small budgets and teams. So, it has been designed to be easily integrated and maintainable for your purposes. Additional features have been implemented to aid in the continual maintenance of the program as Canvas periodically adds new events and new columns to existing events, and more improvements are coming!
 
 I welcome any community contributions and collaboration on this project. I will maintain and update as necessary.
 
 ## Features
 
-__Shoryuken__, provides a easy to use multi-thread SQS processor. Handling events from SQS is [pretty easy](https://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/sqs-examples.html), but the number of messages that can come through can go from trickle to fire hose instantly. Without multi-threading, messages will backup and your real-time data eventually becomes 'when it arrives', likely to catch up in the middle of the night when things slow down.
+__Shoryuken__, provides an easy to use multi-threaded SQS processor. Handling events from SQS is [pretty easy](https://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/sqs-examples.html), but the number of messages that can come through can go from trickle to firehose instantly when there's a lot of activity in Canvas. Without multi-threading, messages will backup and your real-time data eventually becomes 'when it arrives', likely to catch up in the middle of the night when things slow down.
 
-__Sequel__, provides the support for multiple databases without extra code. It also provides DB connection pooling to handle the numerous threads inserting rows.
+__Sequel__, provides the support for multiple databases without extra code management. It also provides DB connection pooling to handle the numerous threads inserting rows.
 
 _These two gems were chosen for their active support and contributions by multiple contributors. This allows _us_ to focus on Live Events, and not multi-threaded SQS processing or supporting multiple database adapters and engines._
 
 __Live Events Worker__, is the Shoryuken process that polls messages an passes them to the parser, then handles importing data to SQL.
 
-__Parsers__, are provided for each event format. These files are the product of auto-generated JSON to SQL and have been simplified in `CASE` statements for each event type to produce `key value` pairs of _known_ event information. Each event is passed to the parser, and the known fields are defined and datatype are set.
+__Parsers__, are provided for each event format in `src/events`. These files are the product of patiently collecting auto-generated JSON to SQL tables and columns. Then auto generating the code to simplified `CASE` statements for each event type to produce `key value` pairs of _known_ event information. Each event is passed to the parser, and the known fields are defined and datatype are set. 
 
-__Import__ happens after each event is parsed. A `Hash` with non-null fields is passed to the import method. Each string field is passed through its Schema definition and trimmed to the defined length.
+_Most maintenance happens here, when Canvas adds new columns or events, you'll need to update the code... Hopefully we'll do this collectively and share what we see. It's entirely possible to never see certain events based on how your users use Canvas. So that first school to see new data should update the code and submit a PR so others can update._
 
-__Schemas__, are configured in `lib/schemas`, and help prepare data before import, and simplify the maintenance cycle. Each schema file for Canvas or Caliper (or custom tables) maintains the event type table definition for each column. This helps LEDbelly know when new fields are added and existing fields are out of bounds. The schemas are also used to auto generate the DDL for your preferred database using `rake create_tables` task.
+__Import__ happens after each event is parsed. A `Hash` with non-null fields is passed to the import method. Each string field is passed through its Schema definition and trimmed to the defined length, ensuring the row is inserted.
 
-__Create Tables__, or `rake create_tables` will use the database.yml `adapter` to generate the DDL files for each schema. An attempt was made to use Sequel's existing features to handle this, but problems arise when trying to handle multi-byte character strings for multiple databases. So the Rake task is a current __best effort__ attempt to handle this for the 4 supported databases.
+__Schemas__, are configured in `lib/schemas`, and help prepare data before import, and simplify the maintenance cycle. Each schema file for Canvas or Caliper (or custom tables) maintains the event type table definition for each column. This helps LEDbelly know when new fields are added and existing fields are out-of-bounds. The schemas are also used to auto generate the DDL for your preferred database using `rake create_tables` task.
+
+__Create Tables__, or `rake create_tables` will use the database.yml `adapter` to generate the DDL files for each schema. An attempt was made to use Sequel's existing features to handle this, but problems arise when trying to handle multi-byte character strings for multiple databases. So the Rake task is a current _best effort_ attempt to handle this for the 4 supported databases.
 
 __Logging__, various log points are provided to catch the following:
 - `String` value before insert is longer than defined. The string will be truncated to the defined length (accounting to multi-byte strings/storage), and the `log/sql-truncations.log` file will collect these. Use this to update the `lib/schemas` files.
-- SQL errors will land in `log/sql-errors.log`, these are typically simple issues currently unaddressed by the code. The log will contain the event name, the error, the SQL statemet that failed, and the Hash provided for insert.
+- SQL errors will land in `log/sql-errors.log`, these are typically simple issues currently unaddressed by the code. The log will contain the event name, the error, the SQL statement that failed, and the Hash provided for insert.
 - Body Ccount, for Canvas Raw events, and soon for Caliper. If an event was received with more columns that we have defined, the log will contain the list of new fields we need to add to the code and schema.
 - SQL recovery log `logs/sql-recovery.sql` will contain any failed SQL statement. This is useful if you want to recover the lost data easily after updating.
 - [Logger](https://github.com/ruby/logger), can be enabled in `ledbelly.rb` for the database connection. This will log every transaction by day. The files will become huge. It's disabled by default and provided for debugging purposes.
 - Shoryuken, has it's own logging options, they are covered below. I only run shoryuken logging for debugging purposes.
 
-__Live Stream__, while LEDbelly will process both Canvas and Caliper formats into their specific event tables, sometimes it's easier to deal with things collectively. Live Stream available in `src/extentions` passes common fields for all __Canvas__ events into a `live_stream` table. This is useful for tracking active users and types of activity without overly cumbersome views and joins. I __recommend__ keeping this table and process in play, it's available by default, but you can remove it. It's also packaged to give an example of providing your own extensions in case you want to add or manipulate some stream without modifying the defaults.
+__Live Stream__, while LEDbelly will process both Canvas and Caliper formats into their specific event tables, sometimes it's easier to deal with things collectively. Live Stream available in `src/extentions` passes common fields for all Canvas events into a `live_stream` table. This is useful for tracking active users and types of activity without overly cumbersome views and joins. I __recommend__ keeping this table and process in play, it's available by default, but you can remove it. It's also packaged to give an example of providing your own extensions in case you want to add or manipulate some stream without modifying the defaults. A couple of quick SQL queries in `sql/samples` are provided.
 
 
 ## Getting Started
@@ -60,7 +63,8 @@ Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https
     `gem install pg -v '1.0.0' -- --with-opt-dir="/usr/local/opt/libpq"`
 4) Run `bundle install`
 5) Run `rake create_tables`, evaluate the schema files and run them against your db instance
-	- You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
+	
+    - You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
 	- Add schemas and manage tables for any `extensions` you use or create like __Live Stream__
 6) Start LEDbelly, from the directory root
 
@@ -71,12 +75,17 @@ Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https
     
     __[FAIL] You should set a logfile if you're going to daemonize__
 7) Daemonize the Daemon
-Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in [SYSTEMD.md](SYSTEMD.md)
+
+	Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in [SYSTEMD.md](SYSTEMD.md)
 
 ### Other startup options
+
 terminal output __without__ _Shoryuken_ logging
+
 `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml`
+
 terminal output __with__ _Shoryuken_ logging
+
 `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L log/shoryuken.log`
 
 
@@ -122,9 +131,11 @@ New code should pass the [RuboCop](https://github.com/rubocop-hq/rubocop) rules 
 Community:
 - [Live Events Services - Table of Contents](https://community.canvaslms.com/docs/DOC-15740-live-events-services-table-of-contents)
 - [SQS Queue setup for Live Events](https://community.canvaslms.com/docs/DOC-14163-how-do-i-create-an-sqs-queue-to-receive-live-events-data-from-canvas)
+
+Watch commits to this file, they usually indicate when you'll see new events or columns.
 - [Canvas Live Events Github](https://github.com/instructure/canvas-lms/blob/master/lib/canvas/live_events.rb)
 
-### Known Issues
+## Known Issues
 
 1) Much of the Caliper data where you'd want to have integer ID's contains strings with ID's. I am not currently using Caliper events, but I receive them for development purposes. I have refrained from making decisions for others here, but would expect the desirable choice would be RegEx matching and storing the ID.
 ```
@@ -142,10 +153,10 @@ membership_organization_type: 'CourseOffering'
 
 4) `interaction_data` for `quizzes.item_created` and `quizzes.item_updated` needs to be improved, but I am not currently using these columns.
 
-### Credits
+## Credits
 Many thanks to Pablo Cantero and Jeremy Evans for their open source contributions. LEDbelly would be much harder to maintain without these Gems.
 
-The name _LEDbelly_ was chosen one morning when [Huddie Ledbetter aka Lead Belly](https://en.wikipedia.org/wiki/Lead_Belly) began playing via iTunes. It seemed apropos for a _Live Events Daemon and Consumer_
+The name _LEDbelly_ was chosen one morning while listening to [Huddie Ledbetter aka Lead Belly](https://en.wikipedia.org/wiki/Lead_Belly). It seemed apropos for a _Live Events Daemon and Consumer_
 
 [The CCSD Canvas Team](http://obl.ccsd.net)
 
