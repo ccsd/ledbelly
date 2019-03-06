@@ -2,8 +2,9 @@
 systemd and systemctl allow you to add LEDbelly to the systems service manager. This enables LEDbelly to be reloaded if it crashes, disconnects or your system reboots, helping to keep your Live Events working in real-time.
 
 
-1) `sudo nano /etc/systemd/system/ledbelly.service`
-enter:
+1) Edit `sudo nano /etc/systemd/system/ledbelly.service`
+
+	with the following, adjusting your installation path `/canvas/live-events/`
 ```
 [Unit]
 Description=LEDbelly - Live Events Daemon
@@ -24,14 +25,19 @@ WantedBy=multi-user.target
 ```
 
 2) Reload and Enable
-`sudo systemctl daemon-reload; sudo systemctl enable ledbelly`
+
+	`sudo systemctl daemon-reload; sudo systemctl enable ledbelly`
 
 3) Start the service
-`sudo systemctl start ledbelly`
+
+	`sudo systemctl start ledbelly`
 
 4) Check the status
-`sudo systemctl status ledbelly.service`
+
+	`sudo systemctl status ledbelly.service`
 
 5) Stop and Restart
-`sudo systemctl stop ledbelly`
-`sudo systemctl restart ledbelly`
+
+	`sudo systemctl stop ledbelly`
+
+	`sudo systemctl restart ledbelly`
