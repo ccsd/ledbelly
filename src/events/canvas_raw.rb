@@ -58,7 +58,7 @@ module CanvasRawEvents
             #{event_data.to_json}\n
             ----\n
             fields missing: #{test}
-        ]
+        ].join
         # store in log file
         open('log/event-missing-data.log', 'a') do |f|
           f << err

@@ -71,7 +71,7 @@ module LiveStream
         ------ event data\n
         #{event_data}\n
         /---#{event_name}---\n
-      ].join(' ')
+      ].join
       
       # store in log file
       puts err

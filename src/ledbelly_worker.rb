@@ -121,7 +121,7 @@ class LiveEvents
       #{import_data}\n
       ------ event data\n
       #{event_data}\n
-    ]
+    ].join
     # puts err
     
     # store in log file
