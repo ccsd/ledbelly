@@ -335,7 +335,7 @@ $schema = {
     hostname: { type: 'string', size: 64 },
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
-    producer: { type: 'string', size: 12, mbstr: true },
+    producer: { type: 'string', size: 12 },
     request_id: { type: 'string', size: 255 },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 255 },
@@ -1525,7 +1525,7 @@ $schema = {
     event_time: { type: 'datetime' },
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
-    producer: { type: 'string', size: 12, mbstr: true },
+    producer: { type: 'string', size: 12 },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 40 },
     root_account_uuid: { type: 'string', size: 40 },
@@ -1594,7 +1594,7 @@ $schema = {
     # metadata
     event_name: { type: 'string', size: 20 },
     event_time: { type: 'datetime' },
-    producer: { type: 'string', size: 12, mbstr: true },
+    producer: { type: 'string', size: 12 },
     root_account_uuid: { type: 'string', size: 40 },
     # body
     id: { type: 'int' },
@@ -1620,7 +1620,7 @@ $schema = {
     # metadata
     event_name: { type: 'string', size: 19 },
     event_time: { type: 'datetime' },
-    producer: { type: 'string', size: 12, mbstr: true },
+    producer: { type: 'string', size: 12 },
     root_account_uuid: { type: 'string', size: 40 },
     # body
     quiz_session_id: { type: 'int' },
@@ -1644,7 +1644,7 @@ $schema = {
     # metadata
     event_name: { type: 'string', size: 30 },
     event_time: { type: 'datetime' },
-    producer: { type: 'string', size: 12, mbstr: true },
+    producer: { type: 'string', size: 12 },
     root_account_uuid: { type: 'string', size: 40 },
     # body
     accepted_student_access_code_at: { type: 'datetime' },
