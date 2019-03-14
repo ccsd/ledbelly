@@ -969,6 +969,32 @@ module CanvasRawEvents
         updated_at:                         body['updated_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
       }
 
+    when 'quizzes.quiz_session_ungraded'
+      
+      metadata = metadata(event_data['metadata'])
+      body = event_data['body']
+      bodydata = {
+        accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : Time.parse(body['accepted_student_access_code_at']).utc.strftime(TIME_FORMAT).to_s,
+        allow_backtracking:                 body['allow_backtracking']&.to_s,
+        attempt:                            body['attempt']&.to_i,
+        authoritative_result_id:            body['authoritative_result_id']&.to_i,
+        created_at:                         body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
+        end_at:                             body['end_at'].nil? ? nil : Time.parse(body['end_at']).utc.strftime(TIME_FORMAT).to_s,
+        grade_passback_guid:                body['grade_passback_guid']&.to_s,
+        graded_url:                         body['graded_url']&.to_s,
+        id:                                 body['id']&.to_i,
+        invalidated_student_access_code_at: body['invalidated_student_access_code_at'].nil? ? nil : Time.parse(body['invalidated_student_access_code_at']).utc.strftime(TIME_FORMAT).to_s,
+        one_at_a_time_type:                 body['one_at_a_time_type']&.to_s,
+        passback_url:                       body['passback_url']&.to_s,
+        points_possible:                    body['points_possible']&.to_f,
+        quiz_id:                            body['quiz_id']&.to_i,
+        session_items_count:                body['session_items_count']&.to_i,
+        start_at:                           body['start_at'].nil? ? nil : Time.parse(body['start_at']).utc.strftime(TIME_FORMAT).to_s,
+        status:                             body['status']&.to_s,
+        submitted_at:                       body['submitted_at'].nil? ? nil : Time.parse(body['submitted_at']).utc.strftime(TIME_FORMAT).to_s,
+        updated_at:                         body['updated_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
+      }
+
     when 'quizzes.quiz_updated'
 
       metadata = metadata(event_data['metadata'])

@@ -927,6 +927,7 @@ $schema = {
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
     request_id: { type: 'string', size: 36 },
+    real_user_id: { type: 'bigint' },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 40 },
     root_account_uuid: { type: 'string', size: 40 },
@@ -992,6 +993,7 @@ $schema = {
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     request_id: { type: 'string', size: 36 },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 40 },
@@ -1029,6 +1031,7 @@ $schema = {
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     request_id: { type: 'string', size: 36 },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 40 },
@@ -1501,7 +1504,7 @@ $schema = {
 
   live_quizzes_lti_grade_changed: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_lti_grade_changed_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1517,7 +1520,7 @@ $schema = {
 
   live_quizzes_next_quiz_duplicated: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_next_quiz_duplicated_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1555,7 +1558,7 @@ $schema = {
 
   live_quizzes_quiz_clone_job_created: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_quiz_clone_job_created_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1571,7 +1574,7 @@ $schema = {
 
   live_quizzes_quiz_clone_job_updated: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_quiz_clone_job_updated_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1614,7 +1617,7 @@ $schema = {
 
   live_quizzes_quiz_graded: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_quiz_graded_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1638,7 +1641,39 @@ $schema = {
 
   live_quizzes_quiz_session_submitted: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_quiz_session_submitted_id: { type: 'bigint', primary_key: true },
+    processed_at: { type: 'datetime' },
+    event_time_local: { type: 'datetime' },
+    # metadata
+    event_name: { type: 'string', size: 30 },
+    event_time: { type: 'datetime' },
+    producer: { type: 'string', size: 12 },
+    root_account_uuid: { type: 'string', size: 40 },
+    # body
+    accepted_student_access_code_at: { type: 'datetime' },
+    allow_backtracking: { type: 'string', size: 5 },
+    attempt: { type: 'int' },
+    authoritative_result_id: { type: 'int' },
+    created_at: { type: 'datetime' },
+    end_at: { type: 'datetime' },
+    grade_passback_guid: { type: 'string', size: 255 },
+    graded_url: { type: 'string', size: 77 },
+    id: { type: 'int' },
+    invalidated_student_access_code_at: { type: 'datetime' },
+    one_at_a_time_type: { type: 'string', size: 8 },
+    passback_url: { type: 'string', size: 255 },
+    points_possible: { type: 'float', size: 53 },
+    quiz_id: { type: 'int' },
+    session_items_count: { type: 'int' },
+    start_at: { type: 'datetime' },
+    status: { type: 'string', size: 11 },
+    submitted_at: { type: 'datetime' },
+    updated_at: { type: 'datetime' },
+  }, 
+
+  live_quizzes_quiz_session_ungraded: {
+    # created
+    quizzes_quiz_session_ungraded_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1670,7 +1705,7 @@ $schema = {
 
   live_quizzes_quiz_updated: {
     # created
-    quiz_submitted_id: { type: 'bigint', primary_key: true },
+    quizzes_quiz_updated_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
