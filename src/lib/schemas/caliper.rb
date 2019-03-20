@@ -40,7 +40,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 15 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_asset_type: { type: 'string', size: 24 },
@@ -88,7 +88,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_datecreated: { type: 'datetime' },
@@ -140,7 +140,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     context: { type: 'string', size: 42 },
     # specific
@@ -194,7 +194,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_datecreated: { type: 'datetime' },
@@ -246,7 +246,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_datemodified: { type: 'datetime' },
@@ -298,7 +298,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_datemodified: { type: 'datetime' },
@@ -343,7 +343,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -387,7 +387,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 12 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_ispartof_id: { type: 'string', size: 100 },
@@ -436,7 +436,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 11 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_is_announcement: { type: 'string', size: 5 }
@@ -483,7 +483,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_datecreated: { type: 'datetime' },
@@ -538,7 +538,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_access_is_current: { type: 'string', size: 5 },
@@ -596,7 +596,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -652,7 +652,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -715,7 +715,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 10 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -763,7 +763,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -810,7 +810,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -851,7 +851,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
     object_member_id: { type: 'string', size: 100 },
@@ -893,7 +893,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 12 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -925,7 +925,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 12 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -973,7 +973,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 15 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1028,7 +1028,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 15 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1084,7 +1084,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1125,7 +1125,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1174,7 +1174,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1221,7 +1221,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1267,7 +1267,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
@@ -1314,7 +1314,7 @@ $schema = {
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
     type: { type: 'string', size: 5 },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     version: { type: 'string', size: 12 },
     # specific
   },
