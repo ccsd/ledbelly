@@ -94,7 +94,7 @@ $schema = {
     user_id_meta: { type: 'bigint' },
     user_login: { type: 'string', size: 64 },
     user_sis_id: { type: 'string', size: 32 },
-    workflow_state: { type: 'string', size: 11 },
+    workflow_state: { type: 'string', size: 19 },
     # body
     assignment_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
