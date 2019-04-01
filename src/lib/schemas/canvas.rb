@@ -1953,7 +1953,7 @@ $schema = {
     uuid: { type: 'string', size: 40 },
     name: { type: 'string', size: 100, mbstr: true },
     short_name: { type: 'string', size: 64, mbstr: true },
-    workflow_state: { type: 'string', size: 10 },
+    workflow_state: { type: 'string', size: 14 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
   }, 
