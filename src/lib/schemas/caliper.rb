@@ -647,7 +647,7 @@ $schema = {
     object_type: { type: 'string', size: 100 },
     object_user_id: { type: 'string', size: 100 },
     object_user_name: { type: 'string', size: 255 },
-    object_workflow_state: { type: 'string', size: 9 },
+    object_workflow_state: { type: 'string', size: 16 },
     request_id: { type: 'string', size: 36 },
     session_id: { type: 'string', size: 63 },
     session_type: { type: 'string', size: 7 },
