@@ -6,6 +6,7 @@ module CanvasRawEvents
       client_ip:              meta['client_ip']&.to_s,
       context_id_meta:        meta['context_id']&.to_i,
       context_role_meta:      meta['context_role']&.to_s,
+      context_sis_source_id:  meta['context_sis_source_id']&.to_s,
       context_type_meta:      meta['context_type']&.to_s,
       event_name:             meta['event_name']&.to_s,
       event_time:             meta['event_time'].nil? ? nil : Time.parse(meta['event_time']).utc.strftime(TIME_FORMAT).to_s,
@@ -24,7 +25,7 @@ module CanvasRawEvents
       user_id_meta:           meta['user_id']&.to_i,
       user_login:             meta['user_login']&.to_s,
       user_sis_id:            meta['user_sis_id']&.to_s,
-    }.compact
+    }
   end
 
   def bodycount(event_data, bodydata)
@@ -69,14 +70,41 @@ module CanvasRawEvents
     end
   end
 
+  def missing_meta(sent, expected)
+
+    # original hash, cloned, compact (no nil), strings, keys
+    sent_meta = sent['metadata'].clone.compact.stringify_keys.keys
+    collected_meta = expected.clone.stringify_keys.keys
+    
+    # normalize the key names, since we've added _meta to some
+    normal_meta = collected_meta.map{ |k| k.gsub(/_meta/, '')}
+    
+    # what's missing, get the difference
+    missing = sent_meta - normal_meta | normal_meta - sent_meta
+
+    # store in log file
+    if missing.size.positive?
+      open('log/event-missing-data.log', 'a') do |f|
+        f << "event:  #{sent['metadata']['event_name']} #{missing}\n"
+        f << "data:   #{sent.to_json}\n"
+        f << "\n"
+      end
+    end
+  end
+  
   def canvas_raw(event_name, event_time, event_data)
 
-    case event_name
+    metadata = metadata(event_data['metadata']).compact
+    body = event_data['body']
 
+    missing_meta(event_data, metadata)
+
+    case event_name
+    
     when 'account_notification_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         account_notification_id:  body['account_notification_id']&.to_i,
         subject:                  body['subject']&.to_s,
@@ -89,8 +117,8 @@ module CanvasRawEvents
     when 'asset_accessed'
 
       # metadata fields
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       # body fields
       bodydata = {
         asset_id:       body['asset_id']&.to_i,
@@ -103,8 +131,8 @@ module CanvasRawEvents
 
     when 'assignment_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         assignment_id:          body['assignment_id']&.to_i,
         context_id:             body['context_id']&.to_i,
@@ -126,8 +154,8 @@ module CanvasRawEvents
 
     when 'assignment_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         assignment_id:          body['assignment_id']&.to_i,
         context_id:             body['context_id']&.to_i,
@@ -149,8 +177,8 @@ module CanvasRawEvents
 
     when 'assignment_group_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         assignment_group_id:   body['assignment_group_id']&.to_i,
         context_id:            body['context_id']&.to_i,
@@ -166,8 +194,8 @@ module CanvasRawEvents
 
     when 'assignment_group_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         assignment_group_id:   body['assignment_group_id']&.to_i,
         context_id:            body['context_id']&.to_i,
@@ -183,8 +211,8 @@ module CanvasRawEvents
 
     when 'attachment_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         attachment_id:  body['attachment_id']&.to_i,
         user_id:        body['user_id']&.to_i,
@@ -201,8 +229,8 @@ module CanvasRawEvents
 
     when 'attachment_deleted'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         attachment_id:  body['attachment_id']&.to_i,
         user_id:        body['user_id']&.to_i,
@@ -219,8 +247,8 @@ module CanvasRawEvents
 
     when 'attachment_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         attachment_id:    body['attachment_id']&.to_i,
         user_id:          body['user_id']&.to_i,
@@ -238,8 +266,8 @@ module CanvasRawEvents
 
     when 'content_migration_completed'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         content_migration_id: body['content_migration_id']&.to_i,
         context_id:           body['context_id']&.to_i,
@@ -251,8 +279,8 @@ module CanvasRawEvents
 
     when 'course_completed'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         # body progress
         requirement_count:            body['progress']['requirement_count'].nil? ? nil : body['progress']['requirement_count'].to_i,
@@ -270,8 +298,8 @@ module CanvasRawEvents
 
     when 'course_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         course_id:      body['course_id']&.to_i,
         uuid:           body['uuid']&.to_s,
@@ -284,8 +312,8 @@ module CanvasRawEvents
 
     when 'course_section_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         course_section_id:                      body['course_section_id']&.to_i,
         sis_source_id:                          body['sis_source_id']&.to_s,
@@ -307,8 +335,8 @@ module CanvasRawEvents
 
     when 'course_section_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         course_section_id:                      body['course_section_id']&.to_i,
         sis_source_id:                          body['sis_source_id']&.to_s,
@@ -330,8 +358,8 @@ module CanvasRawEvents
 
     when 'course_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         course_id:      body['course_id']&.to_i,
         account_id:     body['account_id']&.to_i,
@@ -344,8 +372,8 @@ module CanvasRawEvents
 
     when 'discussion_entry_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         discussion_entry_id:                body['discussion_entry_id']&.to_i,
         parent_discussion_entry_id:         body['parent_discussion_entry_id']&.to_i,
@@ -356,8 +384,8 @@ module CanvasRawEvents
 
     when 'discussion_topic_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         discussion_topic_id:  body['discussion_topic_id']&.to_i,
         is_announcement:      body['is_announcement']&.to_s,
@@ -373,8 +401,8 @@ module CanvasRawEvents
     
     when 'discussion_topic_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         discussion_topic_id:  body['discussion_topic_id']&.to_i,
         is_announcement:      body['is_announcement']&.to_s,
@@ -390,8 +418,8 @@ module CanvasRawEvents
 
     when 'enrollment_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         enrollment_id:                       body['enrollment_id']&.to_i,
         course_id:                           body['course_id']&.to_i,
@@ -408,8 +436,8 @@ module CanvasRawEvents
 
     when 'enrollment_state_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         enrollment_id:          body['enrollment_id']&.to_i,
         state:                  body['state']&.to_s,
@@ -426,8 +454,8 @@ module CanvasRawEvents
 
     when 'enrollment_state_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         enrollment_id:          body['enrollment_id']&.to_i,
         state:                  body['state']&.to_s,
@@ -444,8 +472,8 @@ module CanvasRawEvents
 
     when 'enrollment_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         enrollment_id:                      body['enrollment_id']&.to_i,
         course_id:                          body['course_id']&.to_i,
@@ -462,8 +490,8 @@ module CanvasRawEvents
 
     when 'grade_change'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         submission_id:        body['submission_id']&.to_i,
         assignment_id:        body['assignment_id']&.to_i,
@@ -483,8 +511,8 @@ module CanvasRawEvents
 
     when 'group_category_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_category_id:    body['group_category_id']&.to_i,
         group_category_name:  body['group_category_name']&.to_s,
@@ -495,8 +523,8 @@ module CanvasRawEvents
 
     when 'group_category_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_category_id:    body['group_category_id']&.to_i,
         group_category_name:  body['group_category_name']&.to_s,
@@ -507,8 +535,8 @@ module CanvasRawEvents
 
     when 'group_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_category_id:    body['group_category_id']&.to_i,
         group_category_name:  body['group_category_name']&.to_s,
@@ -524,8 +552,8 @@ module CanvasRawEvents
 
     when 'group_membership_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_membership_id:  body['group_membership_id']&.to_i,
         user_id:              body['user_id']&.to_i,
@@ -538,8 +566,8 @@ module CanvasRawEvents
 
     when 'group_membership_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_membership_id:  body['group_membership_id']&.to_i,
         user_id:              body['user_id']&.to_i,
@@ -552,8 +580,8 @@ module CanvasRawEvents
 
     when 'group_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         group_category_id:    body['group_category_id']&.to_i,
         group_category_name:  body['group_category_name']&.to_s,
@@ -569,23 +597,23 @@ module CanvasRawEvents
 
     when 'logged_in'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         redirect_url: body['redirect_url']&.to_s,
       }
       
     when 'logged_out'
 
-      metadata = metadata(event_data['metadata'])
+      # metadata = metadata(event_data['metadata'])
       # body
-      # body = event_data['body']
+      # # body = event_data['body']
       bodydata = {}
 
     when 'module_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         module_id:      body['module_id']&.to_i,
         context_id:     body['context_id']&.to_i,
@@ -597,8 +625,8 @@ module CanvasRawEvents
 
     when 'module_item_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         module_item_id: body['module_item_id']&.to_i,
         module_id:      body['module_id']&.to_i,
@@ -610,8 +638,8 @@ module CanvasRawEvents
 
     when 'module_item_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         module_item_id: body['module_item_id']&.to_i,
         module_id:      body['module_id']&.to_i,
@@ -623,8 +651,8 @@ module CanvasRawEvents
 
     when 'module_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         module_id:      body['module_id']&.to_i,
         context_id:     body['context_id']&.to_i,
@@ -635,8 +663,8 @@ module CanvasRawEvents
       }
 
     when 'plagiarism_resubmit'
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
@@ -657,8 +685,8 @@ module CanvasRawEvents
 
     when 'quiz_export_complete'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         assignment_resource_link_id:  body['assignment']['resource_link_id'].nil? ? nil : body['assignment']['resource_link_id'].to_s,
         assignment_title:             body['assignment']['title'].nil? ? nil : body['assignment']['title'].to_s,
@@ -669,8 +697,8 @@ module CanvasRawEvents
 
     when 'quiz_submitted'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         submission_id:  body['submission_id']&.to_i,
         quiz_id:        body['quiz_id']&.to_i,
@@ -678,8 +706,8 @@ module CanvasRawEvents
 
     when 'quizzes.item_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
 
       if body.key?('properties')
         properties = body['properties']
@@ -780,8 +808,8 @@ module CanvasRawEvents
 
     when 'quizzes.item_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
 
       if body.key?('properties')
         properties = body['properties']
@@ -853,8 +881,8 @@ module CanvasRawEvents
 
     when 'quizzes-lti.grade_changed'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         user_uuid:      body['user_uuid']&.to_s,
         quiz_id:        body['quiz_id']&.to_i,
@@ -863,8 +891,8 @@ module CanvasRawEvents
 
     when 'quizzes_next_quiz_duplicated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         new_assignment_id:          body['new_assignment_id']&.to_i,
         original_course_uuid:       body['original_course_uuid']&.to_s,
@@ -876,8 +904,8 @@ module CanvasRawEvents
 
     when 'quizzes.qti_import_completed'
       
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         quiz_id:  body['quiz_id']&.to_i,
         success:  body['success']&.to_s,
@@ -885,8 +913,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_clone_job_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         id:               body['id']&.to_s,
         original_quiz_id: body['original_quiz_id']&.to_s,
@@ -895,8 +923,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_clone_job_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         id:               body['id']&.to_s,
         original_quiz_id: body['original_quiz_id']&.to_s,
@@ -906,8 +934,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         id:                             body['id']&.to_i,
         title:                          body['title']&.to_s,
@@ -926,8 +954,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_graded'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         quiz_session_id:        body['quiz_session_id']&.to_i,
         quiz_session_result_id: body['quiz_session_result_id']&.to_i,
@@ -945,8 +973,8 @@ module CanvasRawEvents
     # when 'quizzes.quiz_session_graded'
     when 'quizzes.quiz_session_submitted'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : Time.parse(body['accepted_student_access_code_at']).utc.strftime(TIME_FORMAT).to_s,
         allow_backtracking:                 body['allow_backtracking']&.to_s,
@@ -971,8 +999,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_session_ungraded'
       
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : Time.parse(body['accepted_student_access_code_at']).utc.strftime(TIME_FORMAT).to_s,
         allow_backtracking:                 body['allow_backtracking']&.to_s,
@@ -997,8 +1025,8 @@ module CanvasRawEvents
 
     when 'quizzes.quiz_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         id:                             body['id']&.to_i,
         title:                          body['title']&.to_s,
@@ -1017,8 +1045,8 @@ module CanvasRawEvents
 
     when 'submission_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
@@ -1039,8 +1067,8 @@ module CanvasRawEvents
 
     when 'submission_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
@@ -1061,8 +1089,8 @@ module CanvasRawEvents
 
     when 'syllabus_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         course_id:          body['course_id']&.to_i,
         syllabus_body:      body['syllabus_body']&.to_s,
@@ -1071,8 +1099,8 @@ module CanvasRawEvents
 
     when 'user_account_association_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         user_id:      body['user_id']&.to_i,
         account_id:   body['account_id']&.to_i,
@@ -1084,8 +1112,8 @@ module CanvasRawEvents
 
     when 'user_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         user_id:        body['user_id']&.to_i,
         uuid:           body['uuid']&.to_s,
@@ -1098,8 +1126,8 @@ module CanvasRawEvents
 
     when 'user_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         user_id:        body['user_id']&.to_i,
         uuid:           body['uuid']&.to_s,
@@ -1112,8 +1140,8 @@ module CanvasRawEvents
 
     when 'wiki_page_created'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         wiki_page_id: body['wiki_page_id']&.to_i,
         title:        body['title']&.to_s,
@@ -1122,8 +1150,8 @@ module CanvasRawEvents
 
     when 'wiki_page_deleted'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         wiki_page_id: body['wiki_page_id']&.to_i,
         title:        body['title']&.to_s,
@@ -1131,8 +1159,8 @@ module CanvasRawEvents
 
     when 'wiki_page_updated'
 
-      metadata = metadata(event_data['metadata'])
-      body = event_data['body']
+      # metadata = metadata(event_data['metadata'])
+      # body = event_data['body']
       bodydata = {
         wiki_page_id: body['wiki_page_id']&.to_i,
         title:        body['title']&.to_s,
