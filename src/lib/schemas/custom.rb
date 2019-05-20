@@ -23,7 +23,8 @@ $schema = {
     context_role_body: { type: 'string', size: 24 },
     context_role_meta: { type: 'string', size: 24 },
     context_type_body: { type: 'string', size: 24 },
-    context_type_meta: { type: 'string', size: 24 },    
+    context_type_meta: { type: 'string', size: 24 },  
+    context_sis_source_id: { type: 'string', size: 32 },
     # asset
     asset_id: { type: 'bigint' },
     asset_type: { type: 'string', size: 24 },
