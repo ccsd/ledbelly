@@ -294,6 +294,7 @@ $schema = {
     # metadata
     client_ip: { type: 'string', size: 39 },
     context_id_meta: { type: 'bigint' },
+    context_sis_source_id: { type: 'string', size: 32 },
     context_role_meta: { type: 'string', size: 24 },
     context_type_meta: { type: 'string', size: 24 },
     event_name: { type: 'string', size: 18 },
@@ -453,6 +454,7 @@ $schema = {
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     request_id: { type: 'string', size: 36 },
     root_account_id: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 40 },
