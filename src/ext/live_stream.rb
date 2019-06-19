@@ -25,6 +25,7 @@ module LiveStream
       context_role_meta:      meta['context_role']&.to_s,
       context_type_body:      body['context_type']&.to_s,
       context_type_meta:      meta['context_type']&.to_s,
+      context_sis_source_id:  meta['context_sis_source_id']&.to_s,
       # event specific
       # asset_accessed
       asset_id:               body['asset_id']&.to_i,
@@ -46,6 +47,8 @@ module LiveStream
       root_account_id:        meta['root_account_id']&.to_i,
       root_account_lti_guid:  meta['root_account_lti_guid']&.to_s,
       root_account_uuid:      meta['root_account_uuid']&.to_s,
+      # generic
+      workflow_state:         body['workflow_state']&.to_s,
     }.compact
 
     # passively truncate strings to DDL length, keeps data insertion, logs warning for manual update

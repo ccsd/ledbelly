@@ -17,7 +17,7 @@ $schema = {
     user_login: { type: 'string', size: 64 },
     user_sis_id: { type: 'string', size: 32 },
     user_account_id: { type: 'bigint' },
-    user_agent: { type: 'string', size: 255 },
+    user_agent: { type: 'string', size: 300 },
     context_id_body: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_body: { type: 'string', size: 24 },
@@ -45,5 +45,7 @@ $schema = {
     root_account_uuid: { type: 'string', size: 40 },
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
+    # generic
+    workflow_state: { type: 'string', size: 256 },
   }
 }
