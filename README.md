@@ -36,7 +36,7 @@ __Create Tables__, or `rake create_tables` will use the database.yml `adapter` t
 __Logging__, various log points are provided to catch the following:
 - `String` value before insert is longer than defined. The string will be truncated to the defined length (accounting to multi-byte strings/storage), and the `log/sql-truncations.log` file will collect these. Use this to update the `lib/schemas` files.
 - SQL errors will land in `log/sql-errors.log`, these are typically simple issues currently unaddressed by the code. The log will contain the event name, the error, the SQL statement that failed, and the Hash provided for insert.
-- Body Ccount, for Canvas Raw events, and soon for Caliper. If an event was received with more columns that we have defined, the log will contain the list of new fields we need to add to the code and schema.
+- Body Count, for Canvas Raw events, and soon for Caliper. If an event was received with more columns that we have defined, the log will contain the list of new fields we need to add to the code and schema.
 - SQL recovery log `logs/sql-recovery.sql` will contain any failed SQL statement. This is useful if you want to recover the lost data easily after updating.
 - [Logger](https://github.com/ruby/logger), can be enabled in `ledbelly.rb` for the database connection. This will log every transaction by day. The files will become huge. It's disabled by default and provided for debugging purposes.
 - Shoryuken, has it's own logging options, they are covered below. I only run shoryuken logging for debugging purposes.
@@ -64,14 +64,14 @@ Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https
 4) Run `bundle install`
 5) Run `rake create_tables`, evaluate the schema files and run them against your db instance
 	
-    - You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
+  - You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
 	- Add schemas and manage tables for any `extensions` you use or create like __Live Stream__
 6) Start LEDbelly, from the directory root
 
     `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L /dev/null -d`
     
     -d flag daemonizes Shoryuken and detaches the terminal
-    Note, you will get an error if you try to daemonize Shoryuken without logging, so `/dev/null` works.
+		Note, you will get an error if you try to daemonize Shoryuken without logging, so `/dev/null` works.
     
     __[FAIL] You should set a logfile if you're going to daemonize__
 7) Daemonize the Daemon
