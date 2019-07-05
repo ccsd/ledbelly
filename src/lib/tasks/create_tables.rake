@@ -49,7 +49,7 @@ task :create_tables do
               mysql_utf8 = adapter == 'mysql2' ? ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci' : nil
               colout << "\t#{column} TEXT#{mysql_utf8}" 
             else
-              coltype = [ 'mysql2', 'tinytds' ].include?(adapter) && params[:mbstr] == true ? 'NVARCHAR' : 'VARCHAR'
+              coltype = [ 'tinytds' ].include?(adapter) && params[:mbstr] == true ? 'NVARCHAR' : 'VARCHAR'
               colout << "\t#{column} #{coltype}(#{params[:size]})"
             end
           when 'datetime'
