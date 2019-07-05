@@ -92,6 +92,7 @@ $schema = {
     version: { type: 'string', size: 12 },
     # specific
     object_datecreated: { type: 'datetime' },
+    object_workflow_state: { type: 'string', size: 11 },
     object_maxscore_numberstr: { type: 'float', size: 53 },
     object_description: { type: 'string', size: 'MAX', mbstr: true },
     object_lock_at: { type: 'datetime' },
