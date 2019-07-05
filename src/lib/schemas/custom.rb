@@ -47,5 +47,27 @@ $schema = {
     job_tag: { type: 'string', size: 100 },
     # generic
     workflow_state: { type: 'string', size: 256 },
+  },
+
+  led_geo_maxmind: {
+    id: { type: 'bigint', primary_key: true },
+    ip: { type: 'string', size: 39 },
+    city: { type: 'string', size: 255 },
+    region_name: { type: 'string', size: 255 },
+    region_code: { type: 'string', size: 255 },
+    country_code: { type: 'string', size: 6 },
+    country_name: { type: 'string', size: 84 },
+    continent_code: { type: 'string', size: 12 },
+    in_eu: { type: 'string', size: 5 },
+    postal: { type: 'string', size: 12 },
+    latitude: { type: 'real', size: 4 },
+    longitude: { type: 'real', size: 4 },
+    timezone: { type: 'string', size: 50 },
+    utc_offset: { type: 'string', size: 6 },
+    country_calling_code: { type: 'string', size: 6 },
+    currency: { type: 'string', size: 6 },
+    languages: { type: 'string', size: 32 },
+    asn: { type: 'string', size: 32 },
+    org: { type: 'string', size: 255 },
   }
 }
