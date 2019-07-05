@@ -40,8 +40,8 @@ class LiveEvents
         live_stream(event_name, event_time, event_data)
       end
     rescue => e
-      puts ":::::::::::::::::: #{event_name} #{event_time} \n:::::::::::::::::: #{e} \n------------------\n#{event_data.to_json}"
-      puts e.backtrace
+      warn "#{event_name} #{event_time.strftime('%Y-%m-%d %H:%M:%S.%L')}\n#{e}"
+      warn e.backtrace
       raise
     end
   end

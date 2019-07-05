@@ -1,4 +1,7 @@
-# shoryuken settings
+# LEDbelly config
+LED = YAML.load_file('./cfg/ledbelly.yml')
+
+# shoryuken config and settings
 SQS_CFG = YAML.load_file('./cfg/sqs.yml')
 Shoryuken.sqs_client = Aws::SQS::Client.new(
   region: SQS_CFG['aws']['region'],
@@ -12,7 +15,7 @@ Shoryuken.sqs_client_receive_message_opts = {
   wait_time_seconds: 20
 }
 
-# load database config
+# database config and settings
 DB_CFG = YAML.load_file('./cfg/database.yml')
 # db connection parameters
 DB = Sequel.connect(
@@ -25,7 +28,7 @@ DB = Sequel.connect(
   encoding: 'utf8', # mssql
   # charset: 'utf8mb4', # mysql
   timeout: 180,
-  pool_timeout: 30,
+  pool_timeout: 45,
   # this will log every single transactions statement, results in very large files
   # logger: Logger.new('log/database.log', 'daily')
 )
@@ -52,17 +55,24 @@ TIME_FORMAT = '%Y-%m-%d %H:%M:%S'.freeze
 
 # broad warnings for available adapters
 WARN_ERRORS = [
+  # mysql
+  # oracle
+  'table or view does not exist', # missing table
+  'invalid identifier', # missing column
+  # postgre
+  # 'relation "afd" does not exist' # relation "" does not exist
+  # 'column "sdf" does not exist' # column "" does not exist
   # tinytds
   'Invalid object name', # missing table
   'Invalid column name', # missing column
   'String or binary data would be truncated', # value larger than column definition
-  # oracle
-  'table or view does not exist', # missing table
-  'invalid identifier', # missing column
 ].freeze
 
 # broad errors worthy of disconnecting, to preserve messages in the queue
 DISCONNECT_ERRORS = [
+  # mysql
+  # oracle
+  # postgre
   # tinytds
   'Adaptive Server connection timed out',
   'Cannot continue the execution because the session is in the kill state',
