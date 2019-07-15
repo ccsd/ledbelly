@@ -8,9 +8,6 @@ $schema = {
     # stream data
     event_name: { type: 'string', size: 64 },
     event_time: { type: 'datetime' },
-    request_id: { type: 'string', size: 36 },
-    session_id: { type: 'string', size: 32 },
-    client_ip: { type: 'string', size: 39 },
     real_user_id: { type: 'bigint' },
     user_id_body: { type: 'bigint' },
     user_id_meta: { type: 'bigint' },
@@ -25,7 +22,15 @@ $schema = {
     context_type_body: { type: 'string', size: 24 },
     context_type_meta: { type: 'string', size: 24 },  
     context_sis_source_id: { type: 'string', size: 32 },
-    # asset
+    # request
+    client_ip: { type: 'string', size: 39 },
+    time_zone: { type: 'string', size: 255 },
+    request_id: { type: 'string', size: 36 },
+    session_id: { type: 'string', size: 32 },
+    url_meta: { type: 'string', size: 'MAX' },
+    http_method: { type: 'string', size: 7 },
+    developer_key_id: { type: 'bigint' },
+    # assets
     asset_id: { type: 'bigint' },
     asset_type: { type: 'string', size: 24 },
     asset_subtype: { type: 'string', size: 24 },

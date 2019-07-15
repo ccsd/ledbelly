@@ -9,9 +9,6 @@ module LiveStream
       # stream data
       event_name:             meta['event_name']&.to_s,
       event_time:             meta['event_time'].nil? ? nil : Time.parse(meta['event_time']).utc.strftime(TIME_FORMAT).to_s,
-      request_id:             meta['request_id']&.to_s,
-      session_id:             meta['session_id']&.to_s,
-      client_ip:              meta['client_ip']&.to_s,
       real_user_id:           meta['real_user_id']&.to_i,
       user_id_body:           body['user_id']&.to_i,
       user_id_meta:           meta['user_id']&.to_i,
@@ -26,8 +23,15 @@ module LiveStream
       context_type_body:      body['context_type']&.to_s,
       context_type_meta:      meta['context_type']&.to_s,
       context_sis_source_id:  meta['context_sis_source_id']&.to_s,
-      # event specific
-      # asset_accessed
+      # request
+      client_ip:              meta['client_ip']&.to_s,
+      time_zone:              meta['time_zone']&.to_s,
+      request_id:             meta['request_id']&.to_s,
+      session_id:             meta['session_id']&.to_s,
+      url_meta:               meta['url']&.to_s,
+      http_method:            meta['http_method']&.to_s,
+      developer_key_id:       meta['developer_key_id']&.to_i,
+      # assets
       asset_id:               body['asset_id']&.to_i,
       asset_type:             body['asset_type']&.to_s,
       asset_subtype:          body['asset_subtype']&.to_s,

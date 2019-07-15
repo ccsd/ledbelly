@@ -4,13 +4,16 @@ module CanvasRawEvents
   def metadata(meta)
     {
       client_ip:              meta['client_ip']&.to_s,
+      context_account_id:     meta['context_account_id']&.to_i,
       context_id_meta:        meta['context_id']&.to_i,
       context_role_meta:      meta['context_role']&.to_s,
       context_sis_source_id:  meta['context_sis_source_id']&.to_s,
       context_type_meta:      meta['context_type']&.to_s,
       event_name:             meta['event_name']&.to_s,
       event_time:             meta['event_time'].nil? ? nil : Time.parse(meta['event_time']).utc.strftime(TIME_FORMAT).to_s,
+      developer_key_id:       meta['developer_key_id']&.to_i,
       hostname:               meta['hostname']&.to_s,
+      http_method:            meta['http_method']&.to_s,
       job_id:                 meta['job_id']&.to_i,
       job_tag:                meta['job_tag']&.to_s,
       producer:               meta['producer']&.to_s,
@@ -20,6 +23,8 @@ module CanvasRawEvents
       root_account_lti_guid:  meta['root_account_lti_guid']&.to_s,
       root_account_uuid:      meta['root_account_uuid']&.to_s,
       session_id:             meta['session_id']&.to_s,
+      time_zone:              meta['time_zone']&.to_s,
+      url_meta:               meta['url']&.to_s,
       user_account_id:        meta['user_account_id']&.to_i,
       user_agent:             meta['user_agent']&.to_s,
       user_id_meta:           meta['user_id']&.to_i,
@@ -126,7 +131,11 @@ module CanvasRawEvents
         asset_subtype:  body['asset_subtype']&.to_s,
         category:       body['category']&.to_s,
         role:           body['role']&.to_s,
-        level:          body['level']&.to_s
+        level:          body['level']&.to_s,
+        filename:       body['filename']&.to_s,
+        display_name:   body['display_name']&.to_s,
+        domain:         body['domain']&.to_s,
+        name:           body['name']&.to_s,
       }
 
     when 'assignment_created'
@@ -375,11 +384,26 @@ module CanvasRawEvents
       # metadata = metadata(event_data['metadata'])
       # body = event_data['body']
       bodydata = {
+        user_id:                            body['user_id']&.to_i,
+        created_at:                         body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
         discussion_entry_id:                body['discussion_entry_id']&.to_i,
         parent_discussion_entry_id:         body['parent_discussion_entry_id']&.to_i,
         parent_discussion_entry_author_id:  body['parent_discussion_entry_author_id']&.to_i,
         discussion_topic_id:                body['discussion_topic_id']&.to_i,
         text:                               body['text']&.to_s,
+      }
+    
+    when 'discussion_entry_submitted'
+
+      bodydata = {
+        user_id:                      body['user_id']&.to_i,
+        created_at:                   body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
+        discussion_entry_id:          body['discussion_entry_id']&.to_i,
+        discussion_topic_id:          body['discussion_topic_id']&.to_i,
+        text:                         body['text']&.to_s,
+        parent_discussion_entry_id:   body['parent_discussion_entry_id']&.to_i,
+        assignment_id:                body['assignment_id']&.to_i,
+        submission_id:                body['submission_id']&.to_i,
       }
 
     when 'discussion_topic_created'
@@ -391,7 +415,7 @@ module CanvasRawEvents
         is_announcement:      body['is_announcement']&.to_s,
         title:                body['title']&.to_s,
         body:                 body['body']&.to_s,
-        assignment_id:        body['body']&.to_i, 
+        assignment_id:        body['assignment_id']&.to_i, 
         context_id:           body['context_id']&.to_i,
         context_type:         body['context_type']&.to_s,
         workflow_state:       body['workflow_state']&.to_s,
@@ -1041,6 +1065,17 @@ module CanvasRawEvents
         shuffle_questions:              body['shuffle_questions']&.to_s,
         status:                         body['status']&.to_s,
         outcome_alignment_set_guid:     body['outcome_alignment_set_guid']&.to_s,
+      }
+    
+    when 'submission_comment_created'
+
+      bodydata = {
+        submission_comment_id:    body['submission_comment_id']&.to_i,
+        submission_id:            body['submission_id']&.to_i,
+        user_id:                  body['user_id']&.to_i,
+        created_at:               body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
+        attachment_ids:           body['attachment_ids'].length == 0 ? nil : body['attachment_ids'].join(','),
+        body:                     body['body']&.to_i,
       }
 
     when 'submission_created'
