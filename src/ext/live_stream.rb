@@ -68,21 +68,7 @@ module LiveStream
     begin
       DB[:live_stream].insert(data)
     rescue => e
-      err = %W[
-        ---#{event_name}---\n
-        #{e.message}\n
-        ------\n
-        #{e.sql}\n
-        ------ import data\n
-        #{import_data}\n
-        ------ event data\n
-        #{event_data}\n
-        /---#{event_name}---\n
-      ].join
-      
-      # store in log file
-      puts err
-      open('log/sql-errors.log', 'a') { |f| f << "#{err} \n\n" }
+      handle_db_errors(e, event_name, event_data, data)
     end
   end
 end
