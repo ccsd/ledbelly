@@ -34,7 +34,7 @@ $schema = {
     membership_type: { type: 'string', size: 10 },
     object_entity_id: { type: 'bigint' },
     object_id: { type: 'string', size: 100 },
-    object_name: { type: 'string', size: 24 },
+    object_name: { type: 'string', size: 255 },
     object_type: { type: 'string', size: 25 },
     request_id: { type: 'string', size: 36 },
     session_id: { type: 'string', size: 63 },
