@@ -529,7 +529,7 @@ $schema = {
 
   live_course_progress: {
     # created
-    course_completed_id: { type: 'bigint', primary_key: true },
+    course_progress_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
@@ -1409,7 +1409,7 @@ $schema = {
 
   learning_outcome_result_updated: {
     # created
-    learning_outcome_result_created_id: { type: 'bigint', primary_key: true },
+    learning_outcome_result_updated_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
