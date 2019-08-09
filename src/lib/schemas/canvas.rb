@@ -246,6 +246,7 @@ $schema = {
     event_name: { type: 'string', size: 24 },
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
+    http_method: { type: 'string', size: 7 },
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
@@ -1086,6 +1087,7 @@ $schema = {
     context_account_id: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_meta: { type: 'string', size: 24 },
+    context_sis_source_id: { type: 'string', size: 32 },
     context_type_meta: { type: 'string', size: 24 },
     event_name: { type: 'string', size: 22 },
     event_time: { type: 'datetime' },
@@ -1607,7 +1609,7 @@ $schema = {
     assignment_title: { type: 'string', size: 255, mbstr: true },
     assignment_context_title: { type: 'string', size: 255, mbstr: true },
     assignment_course_uuid: { type: 'string', size: 40 },
-    qti_export_url_meta: { type: 'string', size: 'MAX' },
+    qti_export_url: { type: 'string', size: 'MAX' },
   }, 
 
   live_quiz_submitted: {
