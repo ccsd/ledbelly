@@ -319,6 +319,23 @@ module CanvasRawEvents
         workflow_state: body['workflow_state']&.to_s,
       }
 
+    when 'course_progress'
+
+      bodydata = {
+        # body progress
+        requirement_count:            body['progress']['requirement_count'].nil? ? nil : body['progress']['requirement_count'].to_i,
+        requirement_completed_count:  body['progress']['requirement_completed_count'].nil? ? nil : body['progress']['requirement_completed_count'].to_i,
+        next_requirement_url:         body['progress']['next_requirement_url'].nil? ? nil : body['progress']['next_requirement_url'].to_s,
+        completed_at:                 body['progress']['completed_at'].nil? ? nil : Time.parse(body['progress']['completed_at']).utc.strftime(TIME_FORMAT).to_s,
+        # body user
+        user_id:                      body['user']['id'].nil? ? nil : body['user']['id'].to_i,
+        user_name:                    body['user']['name'].nil? ? nil : body['user']['name'].to_s,
+        user_email:                   body['user']['email'].nil? ? nil : body['user']['email'].to_s,
+        # body course
+        course_id:                    body['course']['id'].nil? ? nil : body['course']['id'].to_i,
+        course_name:                  body['course']['name'].nil? ? nil : body['course']['name'].to_s,
+      }      
+
     when 'course_section_created'
 
       # metadata = metadata(event_data['metadata'])
@@ -617,6 +634,41 @@ module CanvasRawEvents
         account_id:           body['account_id']&.to_i,
         workflow_state:       body['workflow_state']&.to_s,
         max_membership:       body['max_membership']&.to_i,
+      }
+
+    when 'learning_outcome_result_created'
+
+      bodydata = {
+        learning_outcome_id:  body['learning_outcome_id']&.to_i,
+        mastery:              body['mastery']&.to_i,
+        score:                body['score']&.to_f,
+        created_at:           body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
+        attempt:              body['attempt']&.to_i,
+        possible:             body['possible']&.to_f,
+        original_score:       body['original_score']&.to_f,
+        original_possible:    body['original_possible']&.to_f,
+        original_mastery:     body['original_mastery']&.to_s,
+        assessed_at:          body['assessed_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
+        title:                body['title']&.to_s,
+        percent:              body['percent']&.to_f,
+      }
+
+    when 'learning_outcome_result_updated'
+
+      bodydata = {
+        learning_outcome_id:  body['learning_outcome_id']&.to_i,
+        mastery:              body['mastery']&.to_i,
+        score:                body['score']&.to_f,
+        created_at:           body['created_at'].nil? ? nil : Time.parse(body['created_at']).utc.strftime(TIME_FORMAT).to_s,
+        attempt:              body['attempt']&.to_i,
+        possible:             body['possible']&.to_f,
+        original_score:       body['original_score']&.to_f,
+        original_possible:    body['original_possible']&.to_f,
+        original_mastery:     body['original_mastery']&.to_s,
+        assessed_at:          body['assessed_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
+        title:                body['title']&.to_s,
+        percent:              body['percent']&.to_f,
+        updated_at:           body['updated_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
       }
 
     when 'logged_in'

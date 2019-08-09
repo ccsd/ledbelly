@@ -36,7 +36,7 @@ $schema = {
     icon: { type: 'string', size: 32 },
     start_at: { type: 'datetime' },
     end_at: { type: 'datetime' },
-  }, 
+  },
 
   live_asset_accessed: {
     # created
@@ -80,7 +80,7 @@ $schema = {
     display_name: { type: 'string', size: 'MAX', mbstr: true },
     domain: { type: 'string', size: 255 },
     name: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_assignment_created: {
     # created
@@ -132,7 +132,7 @@ $schema = {
     lti_assignment_id: { type: 'string', size: 36 },
     lti_resource_link_id: { type: 'string', size: 40 },
     lti_resource_link_id_duplicated_from: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_assignment_updated: {
     # created
@@ -184,7 +184,7 @@ $schema = {
     lti_assignment_id: { type: 'string', size: 36 },
     lti_resource_link_id: { type: 'string', size: 40 },
     lti_resource_link_id_duplicated_from: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_assignment_group_created: {
     # created
@@ -229,7 +229,7 @@ $schema = {
     sis_source_id: { type: 'string', size: 32 },
     integration_data: { type: 'string', size: 255, mbstr: true },
     rules: { type: 'string', size: 255, mbstr: true },
-  }, 
+  },
 
   live_assignment_group_updated: {
     # created
@@ -273,7 +273,7 @@ $schema = {
     sis_source_id: { type: 'string', size: 32 },
     integration_data: { type: 'string', size: 255, mbstr: true },
     rules: { type: 'string', size: 255, mbstr: true },
-  }, 
+  },
 
   live_attachment_created: {
     # created
@@ -319,7 +319,7 @@ $schema = {
     unlock_at: { type: 'datetime' },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_attachment_deleted: {
     # created
@@ -365,7 +365,7 @@ $schema = {
     unlock_at: { type: 'datetime' },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_attachment_updated: {
     # created
@@ -410,7 +410,7 @@ $schema = {
     unlock_at: { type: 'datetime' },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_content_migration_completed: {
     # created
@@ -437,7 +437,7 @@ $schema = {
     lti_context_id: { type: 'string', size: 40 },
     context_uuid: { type: 'string', size: 40 },
     import_quizzes_next: { type: 'string', size: 5 },
-  }, 
+  },
 
   live_course_completed: {
     # created
@@ -483,7 +483,7 @@ $schema = {
     # body course
     course_id: { type: 'int' },
     course_name: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_course_created: {
     # created
@@ -525,7 +525,53 @@ $schema = {
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
     workflow_state: { type: 'string', size: 12 },
-  }, 
+  },
+
+  live_course_progress: {
+    # created
+    course_completed_id: { type: 'bigint', primary_key: true },
+    processed_at: { type: 'datetime' },
+    event_time_local: { type: 'datetime' },
+    # metadata
+    client_ip: { type: 'string', size: 39 },
+    context_account_id: { type: 'bigint' },
+    context_id_meta: { type: 'bigint' },
+    context_role_meta: { type: 'string', size: 24 },
+    context_sis_source_id: { type: 'string', size: 32 },
+    context_type_meta: { type: 'string', size: 24 },
+    event_name: { type: 'string', size: 16 },
+    event_time: { type: 'datetime' },
+    hostname: { type: 'string', size: 64 },
+    http_method: { type: 'string', size: 7 },
+    job_id: { type: 'bigint' },
+    job_tag: { type: 'string', size: 100 },
+    producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
+    request_id: { type: 'string', size: 36 },
+    root_account_id: { type: 'bigint' },
+    root_account_lti_guid: { type: 'string', size: 40 },
+    root_account_uuid: { type: 'string', size: 40 },
+    session_id: { type: 'string', size: 32 },
+    time_zone: { type: 'string', size: 255 },
+    url_meta: { type: 'string', size: 'MAX' },
+    user_account_id: { type: 'bigint' },
+    user_agent: { type: 'string', size: 300 },
+    user_id_meta: { type: 'bigint' },
+    user_login: { type: 'string', size: 64 },
+    user_sis_id: { type: 'string', size: 32 },
+    # body progress
+    requirement_count: { type: 'int' },
+    requirement_completed_count: { type: 'int' },
+    next_requirement_url: { type: 'string', size: 255 },
+    completed_at: { type: 'datetime' },
+    # body user
+    user_email: { type: 'string', size: 255 },
+    user_id: { type: 'bigint' },
+    user_name: { type: 'string', size: 64 },
+    # body course
+    course_id: { type: 'int' },
+    course_name: { type: 'string', size: 255 },
+  },
 
   live_course_section_created: {
     # created
@@ -575,7 +621,7 @@ $schema = {
     nonxlist_course_id: { type: 'string', size: 255 },
     stuck_sis_fields: { type: 'string', size: 100 },
     integration_id: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_course_section_updated: {
     # created
@@ -625,7 +671,7 @@ $schema = {
     nonxlist_course_id: { type: 'string', size: 255 },
     stuck_sis_fields: { type: 'string', size: 100 },
     integration_id: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_course_updated: {
     # created
@@ -667,7 +713,7 @@ $schema = {
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
     workflow_state: { type: 'string', size: 12 },
-  }, 
+  },
 
   live_discussion_entry_created: {
     # created
@@ -708,7 +754,7 @@ $schema = {
     discussion_entry_id: { type: 'bigint' },
     discussion_topic_id: { type: 'bigint' },
     text: { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_discussion_entry_submitted: {
     # created
@@ -750,7 +796,7 @@ $schema = {
     parent_discussion_entry_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
     submission_id: { type: 'bigint' },
-  }, 
+  },
 
   live_discussion_topic_created: {
     # created
@@ -795,7 +841,7 @@ $schema = {
     workflow_state: { type: 'string', size: 24 },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_discussion_topic_updated: {
     # created
@@ -839,7 +885,7 @@ $schema = {
     workflow_state: { type: 'string', size: 24 },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_enrollment_created: {
     # created
@@ -885,7 +931,7 @@ $schema = {
     course_section_id: { type: 'bigint' },
     associated_user_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 16 },
-  }, 
+  },
 
   live_enrollment_state_created: {
     # created
@@ -931,7 +977,7 @@ $schema = {
     state_recalculated_at: { type: 'datetime' },
     access_invalidated_at: { type: 'datetime' },
     access_recalculated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_enrollment_state_updated: {
     # created
@@ -978,7 +1024,7 @@ $schema = {
     state_recalculated_at: { type: 'datetime' },
     access_invalidated_at: { type: 'datetime' },
     access_recalculated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_enrollment_updated: {
     # created
@@ -1025,7 +1071,7 @@ $schema = {
     course_section_id: { type: 'bigint' },
     associated_user_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 16 },
-  }, 
+  },
 
   live_grade_change: {
     # created
@@ -1075,7 +1121,7 @@ $schema = {
     user_id: { type: 'bigint' },
     grading_complete: { type: 'string', size: 5 },
     muted: { type: 'string', size: 5 },
-  }, 
+  },
 
   live_group_category_created: {
     # created
@@ -1115,7 +1161,7 @@ $schema = {
     context_id: { type: 'bigint' },
     context_type: { type: 'string', size: 24 },
     group_limit: { type: 'int' },
-  }, 
+  },
 
   live_group_category_updated: {
     # created
@@ -1153,7 +1199,7 @@ $schema = {
     context_id: { type: 'bigint' },
     context_type: { type: 'string', size: 24 },
     group_limit: { type: 'int' },
-  }, 
+  },
 
   live_group_created: {
     # created
@@ -1195,7 +1241,7 @@ $schema = {
     account_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 9 },
     max_membership: { type: 'int' },
-  }, 
+  },
 
   live_group_membership_created: {
     # created
@@ -1234,7 +1280,7 @@ $schema = {
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
     workflow_state: { type: 'string', size: 8 },
-  }, 
+  },
 
   live_group_membership_updated: {
     # created
@@ -1272,7 +1318,7 @@ $schema = {
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
     workflow_state: { type: 'string', size: 7 },
-  }, 
+  },
 
   live_group_updated: {
     # created
@@ -1316,7 +1362,94 @@ $schema = {
     account_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 9 },
     max_membership: { type: 'int' },
-  }, 
+  },
+
+  learning_outcome_result_created: {
+    # created
+    learning_outcome_result_created_id: { type: 'bigint', primary_key: true },
+    processed_at: { type: 'datetime' },
+    event_time_local: { type: 'datetime' },
+    # metadata
+    client_ip: { type: 'string', size: 39 },
+    context_account_id: { type: 'bigint' },
+    context_id: { type: 'bigint' },
+    context_sis_source_id: { type: 'string', size: 32 },
+    context_type_meta: { type: 'string', size: 24 },
+    event_name: { type: 'string', size: 31 },
+    event_time: { type: 'datetime' },
+    hostname: { type: 'string', size: 64 },
+    http_method: { type: 'string', size: 7 },
+    producer: { type: 'string', size: 12 },
+    request_id: { type: 'string', size: 36 },
+    root_account_id: { type: 'bigint' },
+    root_account_lti_guid: { type: 'string', size: 40 },
+    root_account_uuid: { type: 'string', size: 40 },
+    session_id: { type: 'string', size: 32 },
+    time_zone: { type: 'string', size: 255 },
+    url_meta: { type: 'string', size: 'MAX' },
+    user_account_id: { type: 'bigint' },
+    user_agent: { type: 'string', size: 300 },
+    user_id_meta: { type: 'bigint' },
+    user_login: { type: 'string', size: 64 },
+    user_sis_id: { type: 'string', size: 32 },
+    # body
+    learning_outcome_id: { type: 'bigint' },
+    mastery: { type: 'int' },
+    score: { type: 'float', size: 53 },
+    created_at: { type: 'datetime' },
+    attempt: { type: 'int' },
+    possible: { type: 'float', size: 53 },
+    original_score: { type: 'float', size: 53 },
+    original_possible: { type: 'float', size: 53 },
+    original_mastery: { type: 'string', size: 5 },
+    assessed_at: { type: 'datetime' },
+    title: { type: 'string', size: 255 },
+    percent: { type: 'float', size: 53 },
+  },
+
+  learning_outcome_result_updated: {
+    # created
+    learning_outcome_result_created_id: { type: 'bigint', primary_key: true },
+    processed_at: { type: 'datetime' },
+    event_time_local: { type: 'datetime' },
+    # metadata
+    client_ip: { type: 'string', size: 39 },
+    context_account_id: { type: 'bigint' },
+    context_id: { type: 'bigint' },
+    context_sis_source_id: { type: 'string', size: 32 },
+    context_type_meta: { type: 'string', size: 24 },
+    event_name: { type: 'string', size: 31 },
+    event_time: { type: 'datetime' },
+    hostname: { type: 'string', size: 64 },
+    http_method: { type: 'string', size: 7 },
+    producer: { type: 'string', size: 12 },
+    request_id: { type: 'string', size: 36 },
+    root_account_id: { type: 'bigint' },
+    root_account_lti_guid: { type: 'string', size: 40 },
+    root_account_uuid: { type: 'string', size: 40 },
+    session_id: { type: 'string', size: 32 },
+    time_zone: { type: 'string', size: 255 },
+    url_meta: { type: 'string', size: 'MAX' },
+    user_account_id: { type: 'bigint' },
+    user_agent: { type: 'string', size: 300 },
+    user_id_meta: { type: 'bigint' },
+    user_login: { type: 'string', size: 64 },
+    user_sis_id: { type: 'string', size: 32 },
+    # body
+    learning_outcome_id: { type: 'bigint' },
+    mastery: { type: 'int' },
+    score: { type: 'float', size: 53 },
+    created_at: { type: 'datetime' },
+    attempt: { type: 'int' },
+    possible: { type: 'float', size: 53 },
+    original_score: { type: 'float', size: 53 },
+    original_possible: { type: 'float', size: 53 },
+    original_mastery: { type: 'string', size: 5 },
+    assessed_at: { type: 'datetime' },
+    title: { type: 'string', size: 255 },
+    percent: { type: 'float', size: 53 },
+    updated_at: { type: 'datetime' },
+  },
 
   live_logged_in: {
     # created
@@ -1345,7 +1478,7 @@ $schema = {
     user_sis_id: { type: 'string', size: 32 },
     # body
     redirect_url: { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_logged_out: {
     # created
@@ -1372,7 +1505,7 @@ $schema = {
     user_id_meta: { type: 'bigint' },
     user_login: { type: 'string', size: 64 },
     user_sis_id: { type: 'string', size: 32 },
-  }, 
+  },
 
   live_module_created: {
     # created
@@ -1413,7 +1546,7 @@ $schema = {
     name: { type: 'string', size: 255 },
     position: { type: 'int' },
     workflow_state: { type: 'string', size: 11 },
-  }, 
+  },
 
   live_module_item_created: {
     # created
@@ -1453,7 +1586,7 @@ $schema = {
     context_type: { type: 'string', size: 24 },
     position: { type: 'int' },
     workflow_state: { type: 'string', size: 11 },
-  }, 
+  },
 
   live_module_item_updated: {
     # created
@@ -1493,7 +1626,7 @@ $schema = {
     context_type: { type: 'string', size: 24 },
     position: { type: 'int' },
     workflow_state: { type: 'string', size: 11 },
-  }, 
+  },
 
   live_module_updated: {
     # created
@@ -1534,7 +1667,7 @@ $schema = {
     name: { type: 'string', size: 255 },
     position: { type: 'int' },
     workflow_state: { type: 'string', size: 11 },
-  }, 
+  },
 
   live_plagiarism_resubmit: {
     # created
@@ -1581,7 +1714,7 @@ $schema = {
     attempt: { type: 'int' },
     lti_assignment_id: { type: 'string', size: 36 },
     group_id: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_quiz_export_complete: {
     # created
@@ -1610,7 +1743,7 @@ $schema = {
     assignment_context_title: { type: 'string', size: 255, mbstr: true },
     assignment_course_uuid: { type: 'string', size: 40 },
     qti_export_url: { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_quiz_submitted: {
     # created
@@ -1645,7 +1778,7 @@ $schema = {
     # body
     submission_id: { type: 'bigint' },
     quiz_id: { type: 'bigint' },
-  }, 
+  },
 
   live_quizzes_item_created: {
     # created
@@ -1688,7 +1821,7 @@ $schema = {
     outcome_alignment_set_guid: { type: 'string', size: 255 },
     scoring_data: { type: 'string', size: 'MAX' },
     scoring_algorithm: { type: 'string', size: 18 },
-  }, 
+  },
 
   live_quizzes_item_updated: {
     # created
@@ -1731,7 +1864,7 @@ $schema = {
     outcome_alignment_set_guid: { type: 'string', size: 255 },
     scoring_data: { type: 'string', size: 'MAX' },
     scoring_algorithm: { type: 'string', size: 18 },
-  }, 
+  },
 
   live_quizzes_lti_grade_changed: {
     # created
@@ -1747,7 +1880,7 @@ $schema = {
     user_uuid: { type: 'string', size: 40 },
     quiz_id: { type: 'int' },
     score_to_keep: { type: 'string', size: 7 },
-  }, 
+  },
 
   live_quizzes_next_quiz_duplicated: {
     # created
@@ -1770,7 +1903,7 @@ $schema = {
     new_course_uuid: { type: 'string', size: 40 },
     new_course_id: { type: 'string', size: 40 },
     new_resource_link_id: { type: 'string', size: 40 },
-  }, 
+  },
 
   live_quizzes_qti_import_completed: {
     # created
@@ -1785,7 +1918,7 @@ $schema = {
     # body
     quiz_id: { type: 'int' },
     success: { type: 'string', size: 5 },
-  }, 
+  },
 
   live_quizzes_quiz_clone_job_created: {
     # created
@@ -1801,7 +1934,7 @@ $schema = {
     id: { type: 'string', size: 255 },
     original_quiz_id: { type: 'string', size: 255 },
     status: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_quizzes_quiz_clone_job_updated: {
     # created
@@ -1818,7 +1951,7 @@ $schema = {
     original_quiz_id: { type: 'string', size: 255 },
     status: { type: 'string', size: 255 },
     cloned_quiz_id: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_quizzes_quiz_created: {
     # created
@@ -1844,7 +1977,7 @@ $schema = {
     shuffle_answers: { type: 'string', size: 5 },
     status: { type: 'string', size: 16 },
     outcome_alignment_set_guid: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_quizzes_quiz_graded: {
     # created
@@ -1868,7 +2001,7 @@ $schema = {
     percentage: { type: 'float', size: 53 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_quizzes_quiz_session_submitted: {
     # created
@@ -1900,7 +2033,7 @@ $schema = {
     status: { type: 'string', size: 11 },
     submitted_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_quizzes_quiz_session_ungraded: {
     # created
@@ -1932,7 +2065,7 @@ $schema = {
     status: { type: 'string', size: 11 },
     submitted_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_quizzes_quiz_updated: {
     # created
@@ -1958,7 +2091,7 @@ $schema = {
     shuffle_questions: { type: 'string', size: 5 },
     status: { type: 'string', size: 16 },
     outcome_alignment_set_guid: { type: 'string', size: 255 },
-  }, 
+  },
 
   live_submission_comment_created: {
     # created
@@ -2000,7 +2133,7 @@ $schema = {
     created_at: { type: 'datetime' },
     attachment_ids: { type: 'string', size: 255 },
     body:  { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_submission_created: {
     # created
@@ -2051,7 +2184,7 @@ $schema = {
     attempt: { type: 'int' },
     lti_assignment_id: { type: 'string', size: 36 },
     group_id: { type: 'int' },
-  }, 
+  },
 
   live_submission_updated: {
     # created
@@ -2102,7 +2235,7 @@ $schema = {
     url: { type: 'string', size: 'MAX' },
     attempt: { type: 'int' },
     group_id: { type: 'int' },
-  }, 
+  },
 
   live_syllabus_updated: {
     # created
@@ -2134,7 +2267,7 @@ $schema = {
     course_id: { type: 'bigint' },
     syllabus_body: { type: 'string', size: 'MAX' },
     old_syllabus_body: { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_user_account_association_created: {
     # created
@@ -2175,7 +2308,7 @@ $schema = {
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
     is_admin: { type: 'string', size: 5 },
-  }, 
+  },
 
   live_user_created: {
     # created
@@ -2217,7 +2350,7 @@ $schema = {
     workflow_state: { type: 'string', size: 14 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_user_updated: {
     # created
@@ -2260,7 +2393,7 @@ $schema = {
     workflow_state: { type: 'string', size: 14 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
-  }, 
+  },
 
   live_wiki_page_created: {
     # created
@@ -2298,7 +2431,7 @@ $schema = {
     wiki_page_id: { type: 'bigint' },
     title: { type: 'string', size: 255, mbstr: true },
     body: { type: 'string', size: 'MAX' },
-  }, 
+  },
 
   live_wiki_page_deleted: {
     # created
@@ -2335,7 +2468,7 @@ $schema = {
     # body
     wiki_page_id: { type: 'bigint' },
     title: { type: 'string', size: 255, mbstr: true },
-  }, 
+  },
 
   live_wiki_page_updated: {
     # created
@@ -2375,5 +2508,5 @@ $schema = {
     body: { type: 'string', size: 'MAX' },
     old_title: { type: 'string', size: 255, mbstr: true },
     old_body: { type: 'string', size: 'MAX' },
-  }, 
+  },
 }
