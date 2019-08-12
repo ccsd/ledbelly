@@ -330,8 +330,8 @@ $schema = {
     client_ip: { type: 'string', size: 39 },
     context_account_id: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
-    context_sis_source_id: { type: 'string', size: 32 },
     context_role_meta: { type: 'string', size: 24 },
+    context_sis_source_id: { type: 'string', size: 32 },
     context_type_meta: { type: 'string', size: 24 },
     event_name: { type: 'string', size: 18 },
     event_time: { type: 'datetime' },
@@ -377,6 +377,7 @@ $schema = {
     context_account_id: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_meta: { type: 'string', size: 24 },
+    context_sis_source_id: { type: 'string', size: 32 },
     context_type_meta: { type: 'string', size: 24 },
     event_name: { type: 'string', size: 18 },
     event_time: { type: 'datetime' },
@@ -2033,6 +2034,7 @@ $schema = {
     status: { type: 'string', size: 11 },
     submitted_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
+    exclude_from_stats:  { type: 'string', size: 255 },
   },
 
   live_quizzes_quiz_session_ungraded: {

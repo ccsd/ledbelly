@@ -1071,6 +1071,7 @@ module CanvasRawEvents
         status:                             body['status']&.to_s,
         submitted_at:                       body['submitted_at'].nil? ? nil : Time.parse(body['submitted_at']).utc.strftime(TIME_FORMAT).to_s,
         updated_at:                         body['updated_at'].nil? ? nil : Time.parse(body['updated_at']).utc.strftime(TIME_FORMAT).to_s,
+        exclude_from_stats:                 body['status']&.to_s,
       }
 
     when 'quizzes.quiz_session_ungraded'
