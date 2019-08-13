@@ -147,7 +147,7 @@ $schema = {
     # specific
     object_description: { type: 'string', size: 'MAX', mbstr: true },
     object_datemodified: { type: 'datetime' },
-    object_workflow_state: { type: 'string', size: 11 },
+    object_workflow_state: { type: 'string', size: 19 },
     object_datetosubmit: { type: 'datetime' },
     object_maxscore_numberstr: { type: 'float', size: 53 },
     object_lock_at: { type: 'datetime' },
