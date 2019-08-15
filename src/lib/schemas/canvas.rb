@@ -132,6 +132,7 @@ $schema = {
     lti_assignment_id: { type: 'string', size: 36 },
     lti_resource_link_id: { type: 'string', size: 40 },
     lti_resource_link_id_duplicated_from: { type: 'string', size: 255 },
+    submission_types: { type: 'string', size: 255 },
   },
 
   live_assignment_updated: {
@@ -184,6 +185,7 @@ $schema = {
     lti_assignment_id: { type: 'string', size: 36 },
     lti_resource_link_id: { type: 'string', size: 40 },
     lti_resource_link_id_duplicated_from: { type: 'string', size: 255 },
+    submission_types: { type: 'string', size: 255 },
   },
 
   live_assignment_group_created: {

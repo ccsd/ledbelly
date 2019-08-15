@@ -151,6 +151,7 @@ module CanvasRawEvents
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
         lti_resource_link_id_duplicated_from:  body['lti_resource_link_id_duplicated_from']&.to_s,
+        submission_types:       body['submission_types']&.to_s,
       }
 
     when 'assignment_updated'
@@ -172,6 +173,7 @@ module CanvasRawEvents
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
         lti_resource_link_id_duplicated_from:  body['lti_resource_link_id_duplicated_from']&.to_s,
+        submission_types:       body['submission_types']&.to_s,
       }
 
     when 'assignment_group_created'
