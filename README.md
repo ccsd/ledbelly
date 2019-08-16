@@ -117,23 +117,28 @@ SOFTWARE.
 
 [You may contact me via the CanvasLMS Community](https://community.canvaslms.com/people/carroll-ccsd)
 
-While there is currently only 1 stakeholder for this project it is intended for community use and contributions. As such, there will need to be some community collaboration and governance for future development and changes. Canvas cloud hosted instances are updated every 3 weeks, changes to Live Events often occur with these updates. Although, I typically see most changes (new events and columns) added Tuesday night. Users of LEDbelly, would benefit from working together to continuously maintain this repo.
+This project it is intended for community use and contributions. As such, there will need to be some community collaboration and governance for future development and changes. Canvas cloud hosted instances are updated every 3 weeks, changes to Live Events often occur with these updates. Although, I typically see most changes (new events and columns) added Tuesday night. Users of LEDbelly, would benefit from working together to continuously maintain this repo.
 
 I am not a Rubyist, and this is my first multi file Ruby project, if you can _school me_ and help improve the code please do!
 
 New code should pass the [RuboCop](https://github.com/rubocop-hq/rubocop) rules supplied. However, one(1) existing Cop fails, for introducing globals, if you know how to work around this issue please share. :D
 
->For now, simply fork the repo, create a feature branch, commit, and push your changes, and then create a pull request.
+> For now, simply fork the repo, create a feature branch, commit, and push your changes, and then create a pull request.
+> 
+> Review and consider [Issues](https://github.com/ccsd/ledbelly/issues)
 
 
 ## Resources
+#### Community
 
-Community:
-- [Live Events Services - Table of Contents](https://community.canvaslms.com/docs/DOC-15740-live-events-services-table-of-contents)
-- [SQS Queue setup for Live Events](https://community.canvaslms.com/docs/DOC-14163-how-do-i-create-an-sqs-queue-to-receive-live-events-data-from-canvas)
+- [Canvas Live Events | Awesome CanvasLMS](https://community.canvaslms.com/docs/DOC-17354-awesome-canvaslms#CanvasLiveEvents)
+
+#### Canvas Source Files
 
 Watch commits to this file, they usually indicate when you'll see new events or columns.
-- [Canvas Live Events Github](https://github.com/instructure/canvas-lms/blob/master/lib/canvas/live_events.rb)
+- [canvas/live_events.rb](https://github.com/instructure/canvas-lms/blob/master/lib/canvas/live_events.rb)
+ 
+
 
 ## Known Issues
 
