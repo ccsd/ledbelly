@@ -165,4 +165,8 @@ class LiveEvents
     end
   end
 
+  def set_timestamp(k)
+    Time.parse(k).utc.strftime(TIME_FORMAT).to_s
+  end
+
 end

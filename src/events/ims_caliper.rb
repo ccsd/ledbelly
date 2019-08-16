@@ -48,7 +48,7 @@ module IMSCaliperEvents
       actor_user_login:               data['actor_user_login']&.to_s,
       edapp_id:                       data['edapp_id']&.to_s,
       edapp_type:                     data['edapp_type']&.to_s,
-      eventtime:                      data['eventtime'].nil? ? nil : Time.parse(data['eventtime']).utc.strftime(TIME_FORMAT).to_s,
+      eventtime:                      data['eventtime'].nil? ? nil : set_timestamp(data['eventtime']),
       group_context_type:             data['group_context_type']&.to_s,
       group_entity_id:                data['group_entity_id']&.to_i,
       group_id:                       data['group_id']&.to_s,
@@ -85,28 +85,28 @@ module IMSCaliperEvents
     
     when 'assignment_created'
       specific = {
-        object_datecreated:         data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:         data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
         object_maxscore_numberstr:  data['object_maxscore_numberstr']&.to_f,
         object_description:         data['object_description']&.to_s,
-        object_lock_at:             data['object_lock_at'].nil? ? nil : Time.parse(data['object_lock_at']).utc.strftime(TIME_FORMAT).to_s,
-        object_datetoshow:          data['object_datetoshow'].nil? ? nil : Time.parse(data['object_datetoshow']).utc.strftime(TIME_FORMAT).to_s,
-        object_datetosubmit:        data['object_datetosubmit'].nil? ? nil : Time.parse(data['object_datetosubmit']).utc.strftime(TIME_FORMAT).to_s,
+        object_lock_at:             data['object_lock_at'].nil? ? nil : set_timestamp(data['object_lock_at']),
+        object_datetoshow:          data['object_datetoshow'].nil? ? nil : set_timestamp(data['object_datetoshow']),
+        object_datetosubmit:        data['object_datetosubmit'].nil? ? nil : set_timestamp(data['object_datetosubmit']),
       }
     
     when 'assignment_updated'
       specific = {
         object_description:         data['object_description']&.to_s,
-        object_datemodified:        data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datemodified:        data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_workflow_state:      data['object_workflow_state']&.to_s,
-        object_datetosubmit:        data['object_datetosubmit'].nil? ? nil : Time.parse(data['object_datetosubmit']).utc.strftime(TIME_FORMAT).to_s,
+        object_datetosubmit:        data['object_datetosubmit'].nil? ? nil : set_timestamp(data['object_datetosubmit']),
         object_maxscore_numberstr:  data['object_maxscore_numberstr']&.to_f,
-        object_lock_at:             data['object_lock_at'].nil? ? nil : Time.parse(data['object_lock_at']).utc.strftime(TIME_FORMAT).to_s,
-        object_datetoshow:          data['object_datetoshow'].nil? ? nil : Time.parse(data['object_datetoshow']).utc.strftime(TIME_FORMAT).to_s,
+        object_lock_at:             data['object_lock_at'].nil? ? nil : set_timestamp(data['object_lock_at']),
+        object_datetoshow:          data['object_datetoshow'].nil? ? nil : set_timestamp(data['object_datetoshow']),
       }
     
     when 'attachment_created'
       specific = {
-        object_datecreated:   data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:   data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
         object_context_id:    data['object_context_id']&.to_i,
         object_context_type:  data['object_context_type']&.to_s,
         object_filename:      data['object_filename']&.to_s,
@@ -116,7 +116,7 @@ module IMSCaliperEvents
     
     when 'attachment_deleted'
       specific = {
-        object_datemodified:  data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datemodified:  data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_context_id:    data['object_context_id']&.to_i,
         object_context_type:  data['object_context_type']&.to_s,
         object_filename:      data['object_filename']&.to_s,
@@ -126,7 +126,7 @@ module IMSCaliperEvents
     
     when 'attachment_updated'
       specific = {
-        object_datemodified:  data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datemodified:  data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_context_id:    data['object_context_id']&.to_i,
         object_context_type:  data['object_context_type']&.to_s,
         object_filename:      data['object_filename']&.to_s,
@@ -151,7 +151,7 @@ module IMSCaliperEvents
     
     when 'enrollment_created'
       specific = {
-        object_datecreated:                             data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:                             data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
         object_course_id:                               data['object_course_id']&.to_s,
         object_course_section_id:                       data['object_course_section_id']&.to_s,
         object_limit_privileges_to_course_section:      data['object_limit_privileges_to_course_section']&.to_s,
@@ -169,7 +169,7 @@ module IMSCaliperEvents
         object_state:               data['object_state']&.to_s,
         object_state_is_current:    data['object_state_is_current']&.to_s,
         object_state_valid_until:   data['object_state_valid_until']&.to_s,
-        object_startedattime:       data['object_startedattime'].nil? ? nil : Time.parse(data['object_startedattime']).utc.strftime(TIME_FORMAT).to_s,
+        object_startedattime:       data['object_startedattime'].nil? ? nil : set_timestamp(data['object_startedattime']),
       }
     
     when 'enrollment_state_updated'
@@ -179,13 +179,13 @@ module IMSCaliperEvents
         object_state:               data['object_state']&.to_s,
         object_state_is_current:    data['object_state_is_current']&.to_s,
         object_state_valid_until:   data['object_state_valid_until']&.to_s,
-        object_startedattime:       data['object_startedattime'].nil? ? nil : Time.parse(data['object_startedattime']).utc.strftime(TIME_FORMAT).to_s,
+        object_startedattime:       data['object_startedattime'].nil? ? nil : set_timestamp(data['object_startedattime']),
       }
     
     when 'enrollment_updated'
       specific = {
-        object_datecreated:                               data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
-        object_datemodified:                              data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:                               data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
+        object_datemodified:                              data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_course_id:                                 data['object_course_id']&.to_s,
         object_course_section_id:                         data['object_course_section_id']&.to_s,
         object_limit_privileges_to_course_section:        data['object_limit_privileges_to_course_section']&.to_s,
@@ -260,7 +260,7 @@ module IMSCaliperEvents
     
     when 'submission_created'
       specific = {
-        object_datecreated:       data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:       data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
         object_submission_type:   data['object_submission_type']&.to_s,
         object_assignee_id:       data['object_assignee_id']&.to_s,
         object_assignee_type:     data['object_assignee_type']&.to_s,
@@ -273,7 +273,7 @@ module IMSCaliperEvents
     
     when 'submission_updated'
       specific = {
-        object_datemodified:    data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datemodified:    data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_assignee_id:     data['object_assignee_id']&.to_s,
         object_assignee_type:   data['object_assignee_type']&.to_s,
         object_assignable_id:   data['object_assignable_id']&.to_s,
@@ -292,8 +292,8 @@ module IMSCaliperEvents
 
     when 'user_account_association_created'
       specific = {
-        object_datecreated:   data['object_datecreated'].nil? ? nil : Time.parse(data['object_datecreated']).utc.strftime(TIME_FORMAT).to_s,
-        object_datemodified:  data['object_datemodified'].nil? ? nil : Time.parse(data['object_datemodified']).utc.strftime(TIME_FORMAT).to_s,
+        object_datecreated:   data['object_datecreated'].nil? ? nil : set_timestamp(data['object_datecreated']),
+        object_datemodified:  data['object_datemodified'].nil? ? nil : set_timestamp(data['object_datemodified']),
         object_is_admin:      data['object_is_admin']&.to_s,
         object_user_id:       data['object_user_id']&.to_s,
       }
