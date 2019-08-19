@@ -747,6 +747,8 @@ $schema = {
     group_id: { type: 'string', size: 100 },
     group_type: { type: 'string', size: 24 },
     hostname: { type: 'string', size: 100 },
+    job_id: { type: 'bigint' },
+    job_tag: { type: 'string', size: 100 },
     membership_id: { type: 'string', size: 124 },
     membership_member_id: { type: 'string', size: 100 },
     membership_member_type: { type: 'string', size: 6 },
