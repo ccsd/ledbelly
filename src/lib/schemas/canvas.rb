@@ -1344,6 +1344,7 @@ $schema = {
     context_type_meta: { type: 'string', size: 24 },
     event_name: { type: 'string', size: 13 },
     event_time: { type: 'datetime' },
+    developer_key_id: { type: 'bigint' },
     hostname: { type: 'string', size: 64 },
     http_method: { type: 'string', size: 7 },
     job_id: { type: 'bigint' },
