@@ -23,9 +23,9 @@ Layout/EmptyLinesAroundMethodBody:
   Enabled: false
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   Enabled: false
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 Layout/IndentationConsistency:
   Enabled: false

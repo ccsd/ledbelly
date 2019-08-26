@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+# core
 gem 'activesupport'
 gem 'aws-sdk-sqs'
 gem 'rake'
@@ -8,5 +9,11 @@ gem 'tiny_tds'
 # gem 'mysql2'
 # gem 'pg'
 # gem 'ruby-oci8'
-# gem 'httparty'
-gem 'maxmind-db'
+
+# services
+gem 'httparty'
+# gem 'maxmind-db'
+
+# rake and tasks
+gem 'hashdiff'
+gem 'rubocop'
