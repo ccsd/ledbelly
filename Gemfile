@@ -11,7 +11,7 @@ gem 'tiny_tds'
 # gem 'ruby-oci8'
 
 # services
-gem 'httparty'
+# gem 'httparty'
 # gem 'maxmind-db'
 
 # rake and tasks
