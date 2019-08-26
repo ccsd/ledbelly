@@ -8,7 +8,7 @@ module LiveStream
     data = {
       # stream data
       event_name:             meta['event_name']&.to_s,
-      event_time:             meta['event_time'].nil? ? nil : set_timestamp(meta['event_time']),
+      event_time:             meta['event_time'].nil? ? nil : default_timezone(meta['event_time']),
       real_user_id:           meta['real_user_id']&.to_i,
       user_id_body:           body['user_id']&.to_i,
       user_id_meta:           meta['user_id']&.to_i,
@@ -42,7 +42,7 @@ module LiveStream
       submission_id:          body['submission_id']&.to_i,
       assignment_id:          body['assignment_id']&.to_i,
       quiz_id:                body['quiz_id']&.to_i,
-      submitted_at:           body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
+      submitted_at:           body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
       # system meta
       hostname:               meta['hostname']&.to_s,
       job_id:                 meta['job_id']&.to_i,

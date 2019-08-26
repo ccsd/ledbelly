@@ -10,7 +10,7 @@ module CanvasRawEvents
       context_sis_source_id:  meta['context_sis_source_id']&.to_s,
       context_type_meta:      meta['context_type']&.to_s,
       event_name:             meta['event_name']&.to_s,
-      event_time:             meta['event_time'].nil? ? nil : set_timestamp(meta['event_time']),
+      event_time:             meta['event_time'].nil? ? nil : default_timezone(meta['event_time']),
       developer_key_id:       meta['developer_key_id']&.to_i,
       hostname:               meta['hostname']&.to_s,
       http_method:            meta['http_method']&.to_s,
@@ -113,8 +113,8 @@ module CanvasRawEvents
         subject:                  body['subject']&.to_s,
         message:                  body['message']&.to_s,
         icon:                     body['icon']&.to_s,
-        start_at:                 body['start_at'].nil? ? nil : set_timestamp(body['start_at']),
-        end_at:                   body['end_at'].nil? ? nil : set_timestamp(body['end_at']),
+        start_at:                 body['start_at'].nil? ? nil : default_timezone(body['start_at']),
+        end_at:                   body['end_at'].nil? ? nil : default_timezone(body['end_at']),
       }
 
     when 'asset_accessed'
@@ -143,10 +143,10 @@ module CanvasRawEvents
         workflow_state:         body['workflow_state']&.to_s,
         title:                  body['title']&.to_s,
         description:            body['description']&.to_s,
-        due_at:                 body['due_at'].nil? ? nil : set_timestamp(body['due_at']),
-        unlock_at:              body['unlock_at'].nil? ? nil : set_timestamp(body['unlock_at']),
-        lock_at:                body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
-        updated_at:             body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        due_at:                 body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        unlock_at:              body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:                body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        updated_at:             body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         points_possible:        body['points_possible']&.to_f,
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
@@ -165,10 +165,10 @@ module CanvasRawEvents
         workflow_state:         body['workflow_state']&.to_s,
         title:                  body['title']&.to_s,
         description:            body['description']&.to_s,
-        due_at:                 body['due_at'].nil? ? nil : set_timestamp(body['due_at']),
-        unlock_at:              body['unlock_at'].nil? ? nil : set_timestamp(body['unlock_at']),
-        lock_at:                body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
-        updated_at:             body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        due_at:                 body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        unlock_at:              body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:                body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        updated_at:             body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         points_possible:        body['points_possible']&.to_f,
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
@@ -217,9 +217,9 @@ module CanvasRawEvents
         context_type:   body['context_type']&.to_s,
         context_id:     body['context_id']&.to_i,
         content_type:   body['content_type']&.to_s,
-        unlock_at:      body['unlock_at'].nil? ? nil : set_timestamp(body['unlock_at']),
-        lock_at:        body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        unlock_at:      body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:        body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'attachment_deleted'
@@ -233,9 +233,9 @@ module CanvasRawEvents
         context_type:   body['context_type']&.to_s,
         context_id:     body['context_id']&.to_i,
         content_type:   body['content_type']&.to_s,
-        unlock_at:      body['unlock_at'].nil? ? nil : set_timestamp(body['unlock_at']),
-        lock_at:        body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        unlock_at:      body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:        body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'attachment_updated'
@@ -250,9 +250,9 @@ module CanvasRawEvents
         context_type:     body['context_type']&.to_s,
         context_id:       body['context_id']&.to_i,
         content_type:     body['content_type']&.to_s,
-        unlock_at:        body['unlock_at'].nil? ? nil : set_timestamp(body['unlock_at']),
-        lock_at:          body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
-        updated_at:       body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        unlock_at:        body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:          body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        updated_at:       body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'content_migration_completed'
@@ -273,7 +273,7 @@ module CanvasRawEvents
         requirement_count:            body['progress']['requirement_count'].nil? ? nil : body['progress']['requirement_count'].to_i,
         requirement_completed_count:  body['progress']['requirement_completed_count'].nil? ? nil : body['progress']['requirement_completed_count'].to_i,
         next_requirement_url:         body['progress']['next_requirement_url'].nil? ? nil : body['progress']['next_requirement_url'].to_s,
-        completed_at:                 body['progress']['completed_at'].nil? ? nil : set_timestamp(body['progress']['completed_at']),
+        completed_at:                 body['progress']['completed_at'].nil? ? nil : default_timezone(body['progress']['completed_at']),
         # body user
         user_id:                      body['user']['id'].nil? ? nil : body['user']['id'].to_i,
         user_name:                    body['user']['name'].nil? ? nil : body['user']['name'].to_s,
@@ -290,8 +290,8 @@ module CanvasRawEvents
         uuid:           body['uuid']&.to_s,
         account_id:     body['account_id']&.to_i,
         name:           body['name']&.to_s,
-        created_at:     body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         workflow_state: body['workflow_state']&.to_s,
       }
 
@@ -302,7 +302,7 @@ module CanvasRawEvents
         requirement_count:            body['progress']['requirement_count'].nil? ? nil : body['progress']['requirement_count'].to_i,
         requirement_completed_count:  body['progress']['requirement_completed_count'].nil? ? nil : body['progress']['requirement_completed_count'].to_i,
         next_requirement_url:         body['progress']['next_requirement_url'].nil? ? nil : body['progress']['next_requirement_url'].to_s,
-        completed_at:                 body['progress']['completed_at'].nil? ? nil : set_timestamp(body['progress']['completed_at']),
+        completed_at:                 body['progress']['completed_at'].nil? ? nil : default_timezone(body['progress']['completed_at']),
         # body user
         user_id:                      body['user']['id'].nil? ? nil : body['user']['id'].to_i,
         user_name:                    body['user']['name'].nil? ? nil : body['user']['name'].to_s,
@@ -324,8 +324,8 @@ module CanvasRawEvents
         default_section:                        body['default_section']&.to_s,
         accepting_enrollments:                  body['accepting_enrollments']&.to_s,
         can_manually_enroll:                    body['can_manually_enroll']&.to_s,
-        start_at:                               body['start_at'].nil? ? nil : set_timestamp(body['start_at']),
-        end_at:                                 body['end_at'].nil? ? nil : set_timestamp(body['end_at']),
+        start_at:                               body['start_at'].nil? ? nil : default_timezone(body['start_at']),
+        end_at:                                 body['end_at'].nil? ? nil : default_timezone(body['end_at']),
         workflow_state:                         body['workflow_state']&.to_s,
         restrict_enrollments_to_section_dates:  body['restrict_enrollments_to_section_dates']&.to_s,
         nonxlist_course_id:                     body['nonxlist_course_id']&.to_s,
@@ -345,8 +345,8 @@ module CanvasRawEvents
         default_section:                        body['default_section']&.to_s,
         accepting_enrollments:                  body['accepting_enrollments']&.to_s,
         can_manually_enroll:                    body['can_manually_enroll']&.to_s,
-        start_at:                               body['start_at'].nil? ? nil : set_timestamp(body['start_at']),
-        end_at:                                 body['end_at'].nil? ? nil : set_timestamp(body['end_at']),
+        start_at:                               body['start_at'].nil? ? nil : default_timezone(body['start_at']),
+        end_at:                                 body['end_at'].nil? ? nil : default_timezone(body['end_at']),
         workflow_state:                         body['workflow_state']&.to_s,
         restrict_enrollments_to_section_dates:  body['restrict_enrollments_to_section_dates']&.to_s,
         nonxlist_course_id:                     body['nonxlist_course_id']&.to_s,
@@ -361,8 +361,8 @@ module CanvasRawEvents
         account_id:     body['account_id']&.to_i,
         uuid:           body['uuid']&.to_s,
         name:           body['name']&.to_s,
-        created_at:     body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         workflow_state: body['workflow_state']&.to_s,
       }
 
@@ -370,7 +370,7 @@ module CanvasRawEvents
 
       bodydata = {
         user_id:                            body['user_id']&.to_i,
-        created_at:                         body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
+        created_at:                         body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         discussion_entry_id:                body['discussion_entry_id']&.to_i,
         parent_discussion_entry_id:         body['parent_discussion_entry_id']&.to_i,
         parent_discussion_entry_author_id:  body['parent_discussion_entry_author_id']&.to_i,
@@ -382,7 +382,7 @@ module CanvasRawEvents
 
       bodydata = {
         user_id:                      body['user_id']&.to_i,
-        created_at:                   body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
+        created_at:                   body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         discussion_entry_id:          body['discussion_entry_id']&.to_i,
         discussion_topic_id:          body['discussion_topic_id']&.to_i,
         text:                         body['text']&.to_s,
@@ -403,7 +403,7 @@ module CanvasRawEvents
         context_type:         body['context_type']&.to_s,
         workflow_state:       body['workflow_state']&.to_s,
         lock_at:              body['lock_at']&.to_s,
-        updated_at:           body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
     
     when 'discussion_topic_updated'
@@ -418,7 +418,7 @@ module CanvasRawEvents
         context_type:         body['context_type']&.to_s,
         workflow_state:       body['workflow_state']&.to_s,
         lock_at:              body['lock_at']&.to_s,
-        updated_at:           body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'enrollment_created'
@@ -429,8 +429,8 @@ module CanvasRawEvents
         user_id:                             body['user_id']&.to_i,
         user_name:                           body['user_name']&.to_s,
         type:                                body['type']&.to_s,
-        created_at:                          body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:                          body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:                          body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:                          body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         limit_privileges_to_course_section:  body['limit_privileges_to_course_section']&.to_s,
         course_section_id:                   body['course_section_id']&.to_i,
         associated_user_id:                  body['associated_user_id']&.to_i,
@@ -442,15 +442,15 @@ module CanvasRawEvents
       bodydata = {
         enrollment_id:          body['enrollment_id']&.to_i,
         state:                  body['state']&.to_s,
-        state_started_at:       body['state_started_at'].nil? ? nil : set_timestamp(body['state_started_at']),
+        state_started_at:       body['state_started_at'].nil? ? nil : default_timezone(body['state_started_at']),
         state_is_current:       body['state_is_current']&.to_s,
-        state_valid_until:      body['state_valid_until'].nil? ? nil : set_timestamp(body['state_valid_until']),
+        state_valid_until:      body['state_valid_until'].nil? ? nil : default_timezone(body['state_valid_until']),
         restricted_access:      body['restricted_access']&.to_s,
         access_is_current:      body['access_is_current']&.to_s,
-        state_invalidated_at:   body['state_invalidated_at'].nil? ? nil : set_timestamp(body['state_invalidated_at']),
-        state_recalculated_at:  body['state_recalculated_at'].nil? ? nil : set_timestamp(body['state_recalculated_at']),
-        access_invalidated_at:  body['access_invalidated_at'].nil? ? nil : set_timestamp(body['access_invalidated_at']),
-        access_recalculated_at: body['access_recalculated_at'].nil? ? nil : set_timestamp(body['access_recalculated_at']),
+        state_invalidated_at:   body['state_invalidated_at'].nil? ? nil : default_timezone(body['state_invalidated_at']),
+        state_recalculated_at:  body['state_recalculated_at'].nil? ? nil : default_timezone(body['state_recalculated_at']),
+        access_invalidated_at:  body['access_invalidated_at'].nil? ? nil : default_timezone(body['access_invalidated_at']),
+        access_recalculated_at: body['access_recalculated_at'].nil? ? nil : default_timezone(body['access_recalculated_at']),
       }
 
     when 'enrollment_state_updated'
@@ -458,15 +458,15 @@ module CanvasRawEvents
       bodydata = {
         enrollment_id:          body['enrollment_id']&.to_i,
         state:                  body['state']&.to_s,
-        state_started_at:       body['state_started_at'].nil? ? nil : set_timestamp(body['state_started_at']),
+        state_started_at:       body['state_started_at'].nil? ? nil : default_timezone(body['state_started_at']),
         state_is_current:       body['state_is_current']&.to_s,
-        state_valid_until:      body['state_valid_until'].nil? ? nil : set_timestamp(body['state_valid_until']),
+        state_valid_until:      body['state_valid_until'].nil? ? nil : default_timezone(body['state_valid_until']),
         restricted_access:      body['restricted_access']&.to_s,
         access_is_current:      body['access_is_current']&.to_s,
-        state_invalidated_at:   body['state_invalidated_at'].nil? ? nil : set_timestamp(body['state_invalidated_at']),
-        state_recalculated_at:  body['state_recalculated_at'].nil? ? nil : set_timestamp(body['state_recalculated_at']),
-        access_invalidated_at:  body['access_invalidated_at'].nil? ? nil : set_timestamp(body['access_invalidated_at']),
-        access_recalculated_at: body['access_recalculated_at'].nil? ? nil : set_timestamp(body['access_recalculated_at']),
+        state_invalidated_at:   body['state_invalidated_at'].nil? ? nil : default_timezone(body['state_invalidated_at']),
+        state_recalculated_at:  body['state_recalculated_at'].nil? ? nil : default_timezone(body['state_recalculated_at']),
+        access_invalidated_at:  body['access_invalidated_at'].nil? ? nil : default_timezone(body['access_invalidated_at']),
+        access_recalculated_at: body['access_recalculated_at'].nil? ? nil : default_timezone(body['access_recalculated_at']),
       }
 
     when 'enrollment_updated'
@@ -477,8 +477,8 @@ module CanvasRawEvents
         user_id:                            body['user_id']&.to_i,
         user_name:                          body['user_name']&.to_s,
         type:                               body['type']&.to_s,
-        created_at:                         body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:                         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:                         body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:                         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         limit_privileges_to_course_section: body['limit_privileges_to_course_section']&.to_s,
         course_section_id:                  body['course_section_id']&.to_i,
         associated_user_id:                 body['associated_user_id']&.to_i,
@@ -584,13 +584,13 @@ module CanvasRawEvents
         learning_outcome_id:  body['learning_outcome_id']&.to_i,
         mastery:              body['mastery']&.to_i,
         score:                body['score']&.to_f,
-        created_at:           body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
+        created_at:           body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         attempt:              body['attempt']&.to_i,
         possible:             body['possible']&.to_f,
         original_score:       body['original_score']&.to_f,
         original_possible:    body['original_possible']&.to_f,
         original_mastery:     body['original_mastery']&.to_s,
-        assessed_at:          body['assessed_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        assessed_at:          body['assessed_at'].nil? ? nil : default_timezone(body['updated_at']),
         title:                body['title']&.to_s,
         percent:              body['percent']&.to_f,
       }
@@ -601,16 +601,16 @@ module CanvasRawEvents
         learning_outcome_id:  body['learning_outcome_id']&.to_i,
         mastery:              body['mastery']&.to_i,
         score:                body['score']&.to_f,
-        created_at:           body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
+        created_at:           body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         attempt:              body['attempt']&.to_i,
         possible:             body['possible']&.to_f,
         original_score:       body['original_score']&.to_f,
         original_possible:    body['original_possible']&.to_f,
         original_mastery:     body['original_mastery']&.to_s,
-        assessed_at:          body['assessed_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        assessed_at:          body['assessed_at'].nil? ? nil : default_timezone(body['updated_at']),
         title:                body['title']&.to_s,
         percent:              body['percent']&.to_f,
-        updated_at:           body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'logged_in'
@@ -672,10 +672,10 @@ module CanvasRawEvents
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
         user_id:            body['user_id']&.to_i,
-        submitted_at:       body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
+        submitted_at:       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
         lti_user_id:        body['lti_user_id']&.to_s,
-        graded_at:          body['graded_at'].nil? ? nil : set_timestamp(body['graded_at']),
-        updated_at:         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        graded_at:          body['graded_at'].nil? ? nil : default_timezone(body['graded_at']),
+        updated_at:         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         score:              body['score']&.to_s,
         grade:              body['grade']&.to_s,
         submission_type:    body['submission_type']&.to_s,
@@ -924,8 +924,8 @@ module CanvasRawEvents
         context_id:                     body['context_id']&.to_i,
         owner:                          body['owner']&.to_s,
         has_time_limit:                 body['has_time_limit']&.to_s,
-        due_at:                         body['due_at'].nil? ? nil : set_timestamp(body['due_at']),
-        lock_at:                        body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
+        due_at:                         body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        lock_at:                        body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
         session_time_limit_in_seconds:  body['session_time_limit_in_seconds']&.to_i,
         shuffle_questions:              body['shuffle_questions']&.to_s,
         shuffle_answers:                body['shuffle_answers']&.to_s,
@@ -945,8 +945,8 @@ module CanvasRawEvents
         fudge_points:           body['fudge_points']&.to_s,
         points_possible:        body['points_possible']&.to_f,
         percentage:             body['percentage']&.to_f,
-        created_at:             body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:             body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:             body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:             body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     # when 'quizzes.quiz_session_graded'
@@ -954,50 +954,50 @@ module CanvasRawEvents
     when 'quizzes.quiz_session_submitted'
 
       bodydata = {
-        accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : set_timestamp(body['accepted_student_access_code_at']),
+        accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : default_timezone(body['accepted_student_access_code_at']),
         allow_backtracking:                 body['allow_backtracking']&.to_s,
         attempt:                            body['attempt']&.to_i,
         authoritative_result_id:            body['authoritative_result_id']&.to_i,
-        created_at:                         body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        end_at:                             body['end_at'].nil? ? nil : set_timestamp(body['end_at']),
+        created_at:                         body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        end_at:                             body['end_at'].nil? ? nil : default_timezone(body['end_at']),
         grade_passback_guid:                body['grade_passback_guid']&.to_s,
         graded_url:                         body['graded_url']&.to_s,
         id:                                 body['id']&.to_i,
-        invalidated_student_access_code_at: body['invalidated_student_access_code_at'].nil? ? nil : set_timestamp(body['invalidated_student_access_code_at']),
+        invalidated_student_access_code_at: body['invalidated_student_access_code_at'].nil? ? nil : default_timezone(body['invalidated_student_access_code_at']),
         one_at_a_time_type:                 body['one_at_a_time_type']&.to_s,
         passback_url:                       body['passback_url']&.to_s,
         points_possible:                    body['points_possible']&.to_f,
         quiz_id:                            body['quiz_id']&.to_i,
         session_items_count:                body['session_items_count']&.to_i,
-        start_at:                           body['start_at'].nil? ? nil : set_timestamp(body['start_at']),
+        start_at:                           body['start_at'].nil? ? nil : default_timezone(body['start_at']),
         status:                             body['status']&.to_s,
-        submitted_at:                       body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
-        updated_at:                         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        submitted_at:                       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
+        updated_at:                         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         exclude_from_stats:                 body['status']&.to_s,
       }
 
     when 'quizzes.quiz_session_ungraded'
 
       bodydata = {
-        accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : set_timestamp(body['accepted_student_access_code_at']),
+        accepted_student_access_code_at:    body['accepted_student_access_code_at'].nil? ? nil : default_timezone(body['accepted_student_access_code_at']),
         allow_backtracking:                 body['allow_backtracking']&.to_s,
         attempt:                            body['attempt']&.to_i,
         authoritative_result_id:            body['authoritative_result_id']&.to_i,
-        created_at:                         body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        end_at:                             body['end_at'].nil? ? nil : set_timestamp(body['end_at']),
+        created_at:                         body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        end_at:                             body['end_at'].nil? ? nil : default_timezone(body['end_at']),
         grade_passback_guid:                body['grade_passback_guid']&.to_s,
         graded_url:                         body['graded_url']&.to_s,
         id:                                 body['id']&.to_i,
-        invalidated_student_access_code_at: body['invalidated_student_access_code_at'].nil? ? nil : set_timestamp(body['invalidated_student_access_code_at']),
+        invalidated_student_access_code_at: body['invalidated_student_access_code_at'].nil? ? nil : default_timezone(body['invalidated_student_access_code_at']),
         one_at_a_time_type:                 body['one_at_a_time_type']&.to_s,
         passback_url:                       body['passback_url']&.to_s,
         points_possible:                    body['points_possible']&.to_f,
         quiz_id:                            body['quiz_id']&.to_i,
         session_items_count:                body['session_items_count']&.to_i,
-        start_at:                           body['start_at'].nil? ? nil : set_timestamp(body['start_at']),
+        start_at:                           body['start_at'].nil? ? nil : default_timezone(body['start_at']),
         status:                             body['status']&.to_s,
-        submitted_at:                       body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
-        updated_at:                         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        submitted_at:                       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
+        updated_at:                         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'quizzes.quiz_updated'
@@ -1009,8 +1009,8 @@ module CanvasRawEvents
         context_id:                     body['context_id']&.to_i,
         owner:                          body['owner']&.to_s,
         has_time_limit:                 body['has_time_limit']&.to_s,
-        due_at:                         body['due_at'].nil? ? nil : set_timestamp(body['due_at']),
-        lock_at:                        body['lock_at'].nil? ? nil : set_timestamp(body['lock_at']),
+        due_at:                         body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        lock_at:                        body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
         session_time_limit_in_seconds:  body['session_time_limit_in_seconds']&.to_i,
         shuffle_answers:                body['shuffle_answers']&.to_s,
         shuffle_questions:              body['shuffle_questions']&.to_s,
@@ -1024,7 +1024,7 @@ module CanvasRawEvents
         submission_comment_id:    body['submission_comment_id']&.to_i,
         submission_id:            body['submission_id']&.to_i,
         user_id:                  body['user_id']&.to_i,
-        created_at:               body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
+        created_at:               body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         attachment_ids:           body['attachment_ids'].length == 0 ? nil : body['attachment_ids'].join(','),
         body:                     body['body']&.to_i,
       }
@@ -1035,10 +1035,10 @@ module CanvasRawEvents
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
         user_id:            body['user_id']&.to_i,
-        submitted_at:       body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
+        submitted_at:       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
         lti_user_id:        body['lti_user_id']&.to_s,
-        graded_at:          body['graded_at'].nil? ? nil : set_timestamp(body['graded_at']),
-        updated_at:         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        graded_at:          body['graded_at'].nil? ? nil : default_timezone(body['graded_at']),
+        updated_at:         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         score:              body['score']&.to_f,
         grade:              body['grade']&.to_s,
         submission_type:    body['submission_type']&.to_s,
@@ -1055,11 +1055,11 @@ module CanvasRawEvents
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
         user_id:            body['user_id']&.to_i,
-        submitted_at:       body['submitted_at'].nil? ? nil : set_timestamp(body['submitted_at']),
+        submitted_at:       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
         lti_user_id:        body['lti_user_id']&.to_s,
         lti_assignment_id:  body['lti_assignment_id']&.to_s,
-        graded_at:          body['graded_at'].nil? ? nil : set_timestamp(body['graded_at']),
-        updated_at:         body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        graded_at:          body['graded_at'].nil? ? nil : default_timezone(body['graded_at']),
+        updated_at:         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         score:              body['score']&.to_f,
         grade:              body['grade']&.to_s,
         submission_type:    body['submission_type']&.to_s,
@@ -1083,8 +1083,8 @@ module CanvasRawEvents
         user_id:      body['user_id']&.to_i,
         account_id:   body['account_id']&.to_i,
         account_uuid: body['account_uuid']&.to_s,
-        created_at:   body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:   body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:   body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:   body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         is_admin:     body['is_admin']&.to_s,
       }
 
@@ -1096,8 +1096,8 @@ module CanvasRawEvents
         name:           body['name']&.to_s,
         short_name:     body['short_name']&.to_s,
         workflow_state: body['workflow_state']&.to_s,
-        created_at:     body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'user_updated'
@@ -1108,8 +1108,8 @@ module CanvasRawEvents
         name:           body['name']&.to_s,
         short_name:     body['short_name']&.to_s,
         workflow_state: body['workflow_state']&.to_s,
-        created_at:     body['created_at'].nil? ? nil : set_timestamp(body['created_at']),
-        updated_at:     body['updated_at'].nil? ? nil : set_timestamp(body['updated_at']),
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'wiki_page_created'

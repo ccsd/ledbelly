@@ -165,7 +165,7 @@ class LiveEvents
     end
   end
 
-  def set_timestamp(k)
+  def default_timezone(k)
     Time.parse(k).utc.strftime(TIME_FORMAT).to_s
   end
 
