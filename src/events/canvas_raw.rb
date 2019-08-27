@@ -121,6 +121,7 @@ module CanvasRawEvents
 
       bodydata = {
         asset_id:       body['asset_id']&.to_i,
+        asset_name:     body.fetch('asset_name') { body['name'] }&.to_s,
         asset_type:     body['asset_type']&.to_s,
         asset_subtype:  body['asset_subtype']&.to_s,
         category:       body['category']&.to_s,
@@ -129,7 +130,6 @@ module CanvasRawEvents
         filename:       body['filename']&.to_s,
         display_name:   body['display_name']&.to_s,
         domain:         body['domain']&.to_s,
-        name:           body['name']&.to_s,
       }
 
     when 'assignment_created'

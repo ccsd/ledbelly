@@ -71,6 +71,7 @@ $schema = {
     user_sis_id: { type: 'string', size: 32 },
     # body
     asset_id: { type: 'bigint' },
+    asset_name: { type: 'string', size: 255 },
     asset_type: { type: 'string', size: 24 },
     asset_subtype: { type: 'string', size: 24 },
     category: { type: 'string', size: 24 },
@@ -79,7 +80,6 @@ $schema = {
     filename: { type: 'string', size: 'MAX', mbstr: true },
     display_name: { type: 'string', size: 'MAX', mbstr: true },
     domain: { type: 'string', size: 255 },
-    name: { type: 'string', size: 255 },
   },
 
   live_assignment_created: {
