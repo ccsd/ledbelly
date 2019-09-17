@@ -165,8 +165,8 @@ class LiveEvents
     end
   end
 
-  def default_timezone(k)
-    Time.parse(k).utc.strftime(TIME_FORMAT).to_s
+  def default_timezone(string)
+    Time.parse(string).utc.strftime(TIME_FORMAT).to_s
   end
 
 end
