@@ -74,6 +74,6 @@ task :create_tables do
     end
 
     # puts ddlout
-    open("./sql/ddl/#{format}_schema.#{adapter}.sql", 'w') { |f| f.puts(ddlout) }
+    open("./sql/ddl/#{format}-create-#{adapter}-#{Time.now.strftime('%Y%m%d%H%M%S')}.sql", 'w') { |f| f.puts(ddlout) }
   end
 end
