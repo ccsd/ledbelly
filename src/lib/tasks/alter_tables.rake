@@ -1,4 +1,5 @@
 require 'hashdiff'
+require 'pp'
 
 task :alter_tables do
 
@@ -82,10 +83,10 @@ task :alter_tables do
 
   def compare_sql(format)
     sql_out = []
-    compare_sql = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.mtime(f) }[0...2].reverse
-    new_sql = sql_to_hash(compare_sql.first)
-    old_sql = sql_to_hash(compare_sql.last)
-    changes = Hashdiff.diff(new_sql, old_sql)
+    sql_file = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.mtime(f) }[0...2]
+    new_ddl = sql_to_hash(sql_file.first)
+    old_ddl = sql_to_hash(sql_file.last)
+    changes = Hashdiff.diff(old_ddl, new_ddl)
     sql_out << "-- #{format} schema\n"
     sql_out <<   "--------------------"
     alter_tables_sql(changes).each do |type, changed|
