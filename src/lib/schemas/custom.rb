@@ -71,7 +71,7 @@ $schema = {
     utc_offset: { type: 'string', size: 6 },
     country_calling_code: { type: 'string', size: 6 },
     currency: { type: 'string', size: 6 },
-    languages: { type: 'string', size: 32 },
+    languages: { type: 'string', size: 100 },
     asn: { type: 'string', size: 32 },
     org: { type: 'string', size: 255 },
   }
