@@ -8,7 +8,7 @@ task :alter_tables do
     out = {}
     current_event = ''
     File.read(log)&.each_line do |line|
-      if event_match = line.match(/CREATE TABLE[^.]+\.((?:live|ims)_\w+) \(/i)
+      if event_match = line.match(/CREATE TABLE\s+(?:[^.]+\.)?((?:live|ims)_\w+)\s+\(/i)
         event_table_name_str = event_match.captures.first
         event_table_name = event_table_name_str.to_sym
         out[event_table_name] ||= {}
