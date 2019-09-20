@@ -1,5 +1,4 @@
 require 'hashdiff'
-require 'pp'
 
 task :alter_tables do
 
@@ -83,11 +82,17 @@ task :alter_tables do
 
   def compare_sql(format)
     sql_out = []
-    sql_file = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.mtime(f) }[0...2]
-    new_ddl = sql_to_hash(sql_file.first)
-    old_ddl = sql_to_hash(sql_file.last)
+    sql_files = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.birthtime(f) }[0...2]
+    if sql_files.size < 2
+      warn 'must have 2 to compare! run `rake create_tables`'
+      exit
+    end
+    old_ddl = sql_to_hash(sql_files.first)
+    new_ddl = sql_to_hash(sql_files.last)
     changes = Hashdiff.diff(old_ddl, new_ddl)
-    sql_out << "-- #{format} schema\n"
+    sql_out <<   "--------------------"
+    sql_out << "-- #{format} schema"
+    sql_out << "-- comparing: " + sql_files.to_s
     sql_out <<   "--------------------"
     alter_tables_sql(changes).each do |type, changed|
       sql_out <<   "-- #{type}"
@@ -98,5 +103,5 @@ task :alter_tables do
   end
 
   schemas = Dir["sql/ddl/*sql"].map{ |s| File.basename(s).split(/[._\-]/)[0] }.uniq.sort
-  schemas.each { |f| print compare_sql(f) if ['canvas','caliper'].include? f }
+  schemas.each { |f| print compare_sql(f) + "\n" if ['canvas','caliper'].include? f }
 end
