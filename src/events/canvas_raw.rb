@@ -32,7 +32,7 @@ module CanvasRawEvents
       user_sis_id:            meta['user_sis_id']&.to_s,
     }
   end
-
+  
   def bodycount(event_data, bodydata)
     if event_data['body'].keys.count > bodydata.keys.count
 
@@ -44,6 +44,7 @@ module CanvasRawEvents
       # compare the original message body with the fields for import, what keys are in one hash only?
       test = (eb.keys - bd.keys) | (bd.keys - eb.keys)
       flagged = false
+      sample = []
       # check the missing keys
       test.each do |k|
         # if the missing key is in the metadata
@@ -56,21 +57,22 @@ module CanvasRawEvents
         else
           flagged = true
         end
+        sample << "#{k}:::#{ed['body'].fetch(k) { ed['metadata'].fetch(k) }&.to_s}"
       end
       if flagged == true
-        err = %W[
-            \n#{event_data['metadata']['event_name']} data was missed, because it's not explicitly defined for importing\n
-            msg-body: #{event_data['body'].keys.count} vs body-set #{bodydata.keys.count}\n
-            #{event_data.to_json}\n
-            ----\n
-            fields missing: #{test}
-        ].join
+        err = <<~ERRLOG
+            event_name: #{ed['metadata']['event_name']}
+            count: { sent: #{ed['body'].keys.count}, defined: #{bodydata.keys.count} }
+            summary: { event_name: #{ed['metadata']['event_name']}, undefined: #{test.to_s.gsub('"', '')} }
+            sample: { event_name: #{ed['metadata']['event_name']}, undefined: #{sample} }
+            message: #{ed.to_json}
+
+        ERRLOG
         # store in log file
-        open('log/event-missing-data.log', 'a') do |f|
+        open('log/ddl-undefined.log', 'a') do |f|
           f << err
-          f << "\n\n"
         end
-        puts err
+        puts err if $stdout.isatty
       end
     end
   end
@@ -89,11 +91,20 @@ module CanvasRawEvents
 
     # store in log file
     if missing.size.positive?
-      open('log/event-missing-data.log', 'a') do |f|
-        f << "event:  #{sent['metadata']['event_name']} #{missing}\n"
-        f << "data:   #{sent.to_json}\n"
-        f << "\n"
+      sample = missing.map { |k| "#{k}:::#{sent['metadata'].fetch(k)}" }
+      err = <<~ERRLOG
+          event_name: #{sent['metadata']['event_name']}
+          count: { sent: #{sent['metadata'].keys.count}, defined: #{normal_meta.count} }
+          summary: { event_name: #{sent['metadata']['event_name']}, undefined: #{missing.to_s.gsub('"', '')} }
+          sample: { event_name: #{sent['metadata']['event_name']}, undefined: #{sample} }
+          message: #{sent.to_json}
+
+      ERRLOG
+      # store in log file
+      open('log/ddl-undefined.log', 'a') do |f|
+        f << err
       end
+      puts err if $stdout.isatty
     end
   end
   
@@ -973,7 +984,7 @@ module CanvasRawEvents
         status:                             body['status']&.to_s,
         submitted_at:                       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
         updated_at:                         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
-        exclude_from_stats:                 body['status']&.to_s,
+        exclude_from_stats:                 body['exclude_from_stats']&.to_s,
       }
 
     when 'quizzes.quiz_session_ungraded'
@@ -998,6 +1009,7 @@ module CanvasRawEvents
         status:                             body['status']&.to_s,
         submitted_at:                       body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
         updated_at:                         body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+        exclude_from_stats:                 body['exclude_from_stats']&.to_s,
       }
 
     when 'quizzes.quiz_updated'
