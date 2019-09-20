@@ -22,7 +22,7 @@ task :alter_tables do
   end
 
   def alter_tables_sql(diff)
-    changes = { add: [], modify: [], rename: [], drop: [], double_check: [] }
+    changes = {create: [], add: [], modify: [], rename: [], drop: [], double_check: []}
     renamed = []
     diff.each_with_index do |change, i|
       table_name, column_name = change[1].split('.')
@@ -39,6 +39,7 @@ task :alter_tables do
       # remove
       when '-'
         # first, check if column was renamed
+        next if diff[i+1].nil?
         next_change = diff[i+1]
         next_table_name, next_column_name = next_change[1].split('.')
         next_datatype = next_change.last
@@ -58,11 +59,16 @@ task :alter_tables do
         end
       # add
       when '+'
-        prev_change = diff[i-1]
-        if !prev_change.nil?
+        # addition is a new event table
+        if change.last.class == Hash
+          changes[:create] << "-- ADD #{table_name} FROM CREATE TABLES"
+        else
+          next if diff[i-1].nil?
+          # ensure this one wasn't setup as a rename
+          prev_change = diff[i-1]
           prev_table_name, prev_column_name = prev_change[1].split('.')
           prev_datatype = prev_change.last
-          # ensure this one wasn't setup as a rename
+          # add if new, not if renamed
           if !renamed.any? { |r| r.include?("#{table_name}:::#{prev_column_name}:::#{column_name}") }
             changes[:add] << "ALTER TABLE #{table_name} ADD #{column_name} #{datatype};"
           else
@@ -79,7 +85,7 @@ task :alter_tables do
     compare_sql = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.mtime(f) }[0...2].reverse
     new_sql = sql_to_hash(compare_sql.first)
     old_sql = sql_to_hash(compare_sql.last)
-    changes = Hashdiff.diff(old_sql, new_sql)
+    changes = Hashdiff.diff(new_sql, old_sql)
     sql_out << "-- #{format} schema\n"
     sql_out <<   "--------------------"
     alter_tables_sql(changes).each do |type, changed|
