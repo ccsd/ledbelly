@@ -46,7 +46,7 @@ $schema = {
     hostname: { type: 'string', size: 64 },
     producer: { type: 'string', size: 12 },
     root_account_id: { type: 'bigint' },
-    root_account_lti_guid: { type: 'string', size: 40 },
+    root_account_lti_guid: { type: 'string', size: 100 },
     root_account_uuid: { type: 'string', size: 40 },
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
