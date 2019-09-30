@@ -59,7 +59,7 @@ WARN_ERRORS = [
   # oracle
   'table or view does not exist', # missing table
   'invalid identifier', # missing column
-  # postgre
+  # postgres
   # 'relation "afd" does not exist' # relation "" does not exist
   # 'column "sdf" does not exist' # column "" does not exist
   # tinytds
@@ -71,8 +71,9 @@ WARN_ERRORS = [
 # broad errors worthy of disconnecting, to preserve messages in the queue
 DISCONNECT_ERRORS = [
   # mysql
+  'ConnectionError: MySQL server has gone away',
   # oracle
-  # postgre
+  # postgres
   # tinytds
   'Adaptive Server connection timed out',
   'Cannot continue the execution because the session is in the kill state',
@@ -83,4 +84,5 @@ DISCONNECT_ERRORS = [
   'Unable to access availability database',
   'Unable to connect: Adaptive Server is unavailable or does not exist',
   'Write to the server failed',
+  'Cannot open user default database. Login failed.'
 ].freeze
