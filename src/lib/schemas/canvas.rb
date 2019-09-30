@@ -1230,6 +1230,7 @@ $schema = {
     context_role_meta: { type: 'string', size: 24 },
     context_sis_source_id: { type: 'string', size: 32 },
     context_type_meta: { type: 'string', size: 24 },
+    developer_key_id: { type: 'bigint' },
     event_name: { type: 'string', size: 13 },
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
