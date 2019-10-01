@@ -174,7 +174,7 @@ $schema = {
     context_type: { type: 'string', size: 24 },
     context_uuid: { type: 'string', size: 40 },
     assignment_group_id: { type: 'bigint' },
-    workflow_state: { type: 'string', size: 14 },
+    workflow_state: { type: 'string', size: 19 },
     title: { type: 'string', size: 255, mbstr: true },
     description: { type: 'string', size: 'MAX', mbstr: true },
     due_at: { type: 'datetime' },
