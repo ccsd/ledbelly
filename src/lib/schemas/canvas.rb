@@ -1389,7 +1389,7 @@ $schema = {
     max_membership: { type: 'int' },
   },
 
-  learning_outcome_result_created: {
+  live_learning_outcome_result_created: {
     # created
     learning_outcome_result_created_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
@@ -1432,7 +1432,7 @@ $schema = {
     percent: { type: 'float', size: 53 },
   },
 
-  learning_outcome_result_updated: {
+  live_learning_outcome_result_updated: {
     # created
     learning_outcome_result_updated_id: { type: 'bigint', primary_key: true },
     processed_at: { type: 'datetime' },
