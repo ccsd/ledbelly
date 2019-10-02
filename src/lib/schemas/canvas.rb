@@ -2009,7 +2009,7 @@ $schema = {
     session_time_limit_in_seconds: { type: 'int' },
     shuffle_questions: { type: 'string', size: 5 },
     shuffle_answers: { type: 'string', size: 5 },
-    status: { type: 'string', size: 16 },
+    status: { type: 'string', size: 18 },
     outcome_alignment_set_guid: { type: 'string', size: 255 },
   },
 
@@ -2028,7 +2028,7 @@ $schema = {
     quiz_session_result_id: { type: 'int' },
     grader_id: { type: 'bigint' },
     grading_method: { type: 'string', size: 14 },
-    status: { type: 'string', size: 6 },
+    status: { type: 'string', size: 18 },
     score: { type: 'float', size: 53 },
     fudge_points: { type: 'string', size: 255 },
     points_possible: { type: 'float', size: 53 },
