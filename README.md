@@ -38,7 +38,8 @@ __Schemas__, are configured in `lib/schemas`, and help prepare data before impor
 __Live Stream__, while LEDbelly will process both Canvas and Caliper formats into their specific event tables, sometimes it's easier to deal with things collectively. Live Stream available in `src/extentions` passes common fields for all Canvas events into a `live_stream` table. This is useful for tracking active users and types of activity without overly cumbersome views and joins. I __recommend__ using this feature, it's available by default, but you can remove it. It's also packaged to give an example of providing your own extensions in case you want to add or manipulate some stream without modifying the defaults. A couple of quick SQL queries in `sql/samples` are provided.
 
 
-## [Getting Started](https://github.com/ccsd/ledbelly/wiki/Getting-Started)
+## Getting Started
+[Installation & Setup](https://github.com/ccsd/ledbelly/wiki/Getting-Started)
 
 
 ## License
