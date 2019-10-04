@@ -40,7 +40,7 @@ class LiveEvents
         live_stream(event_name, event_time, event_data)
       end
     rescue => e
-      warn "#{event_name} #{event_time.strftime('%Y-%m-%d %H:%M:%S.%L')}\n#{e}"
+      warn "#{event_name} #{default_timezone(event_time)}\n#{e}"
       warn e.backtrace
       raise
     end
@@ -166,7 +166,7 @@ class LiveEvents
   end
 
   def default_timezone(string)
-    Time.parse(string).utc.strftime(TIME_FORMAT).to_s
+    Time.parse(string).utc.strftime(TIME_FORMAT).to_s unless string.nil?
   end
 
 end
