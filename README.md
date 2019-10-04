@@ -31,62 +31,14 @@ __Import__ happens after each event is parsed. A `Hash` with non-null fields is 
 
 __Schemas__, are configured in `lib/schemas`, and help prepare data before import, and simplify the maintenance cycle. Each schema file for Canvas or Caliper (or custom tables) maintains the event type table definition for each column. This helps LEDbelly know when new fields are added and existing fields are out-of-bounds. The schemas are also used to auto generate the DDL for your preferred database using `rake create_tables` task.
 
-__Create Tables__, or `rake create_tables` will use the database.yml `adapter` to generate the DDL files for each schema. An attempt was made to use Sequel's existing features to handle this, but problems arise when trying to handle multi-byte character strings for multiple databases. So the Rake task is a current _best effort_ attempt to handle this for the 4 supported databases.
+[__Automation Tasks__](https://github.com/ccsd/ledbelly/wiki/Tasks)
 
-__Logging__, various log points are provided to catch the following:
-- `String` value before insert is longer than defined. The string will be truncated to the defined length (accounting to multi-byte strings/storage), and the `log/sql-truncations.log` file will collect these. Use this to update the `lib/schemas` files.
-- SQL errors will land in `log/sql-errors.log`, these are typically simple issues currently unaddressed by the code. The log will contain the event name, the error, the SQL statement that failed, and the Hash provided for insert.
-- Body Count, for Canvas Raw events, and soon for Caliper. If an event was received with more columns that we have defined, the log will contain the list of new fields we need to add to the code and schema.
-- SQL recovery log `logs/sql-recovery.sql` will contain any failed SQL statement. This is useful if you want to recover the lost data easily after updating.
-- [Logger](https://github.com/ruby/logger), can be enabled in `ledbelly.rb` for the database connection. This will log every transaction by day. The files will become huge. It's disabled by default and provided for debugging purposes.
-- Shoryuken, has it's own logging options, they are covered below. I only run shoryuken logging for debugging purposes.
+[__Logging__](https://github.com/ccsd/ledbelly/wiki/Logging)
 
 __Live Stream__, while LEDbelly will process both Canvas and Caliper formats into their specific event tables, sometimes it's easier to deal with things collectively. Live Stream available in `src/extentions` passes common fields for all Canvas events into a `live_stream` table. This is useful for tracking active users and types of activity without overly cumbersome views and joins. I __recommend__ using this feature, it's available by default, but you can remove it. It's also packaged to give an example of providing your own extensions in case you want to add or manipulate some stream without modifying the defaults. A couple of quick SQL queries in `sql/samples` are provided.
 
 
-## Getting Started
-
-Tested with Ruby 2.5.1, but I'm currently running Ruby 2.6.1 and [Bundler](https://bundler.io/)
-
-1) Edit `cfg/sqs.yml.example` and save as `sqs.yml`
-2) Edit `cfg/database.yml.example` and save as `database.yml`
-3) Edit `Gemfile`, choosing (uncomment) the appropriate driver adapter for your database.
-	- `gem tiny_tds` for MS SQL Server*
-	- `gem mysql2` for MySQL
-	- `gem pg` for PostgreSQL*
-	- `gem ruby-oci8` for Oracle
-
-
-	For SQL Server, you may need to install and configure freetds first.
-	
-	If PostgreSQL is installed on another system, you will need to install libpq first and then install the Ruby GEM 'pg' with options.
-    `gem install pg -v '1.0.0' -- --with-opt-dir="/usr/local/opt/libpq"`
-4) Run `bundle install`
-5) Run `rake create_tables`, evaluate the schema files and run them against your db instance
-	
-  - You may choose to use only the Canvas Raw or the Caliper Formats for your database. LEDBelly is available to process either all the time.
-	- Add schemas and manage tables for any `extensions` you use or create like __Live Stream__
-6) Start LEDbelly, from the directory root
-
-    `bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L /dev/null -d`
-    
-    -d flag daemonizes Shoryuken and detaches the terminal
-		Note, you will get an error if you try to daemonize Shoryuken without logging, so `/dev/null` works.
-    
-    __[FAIL] You should set a logfile if you're going to daemonize__
-7) Daemonize the Daemon
-
-	Once LEDbelly is installed and working you may want to run it as a service. So that, if it crashes, or disconnects it will retry or restart when the system restarts. There are probably as many ways to do this as operating systems, but I've provided an example of what I'm trying on RHEL in [SYSTEMD.md](SYSTEMD.md)
-
-### Other startup options
-
-terminal output __without__ _Shoryuken_ logging
-
-`bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml`
-
-terminal output __with__ _Shoryuken_ logging
-
-`bundle exec shoryuken -r ./ledbelly -C cfg/sqs.yml -L log/shoryuken.log`
+## [Getting Started](https://github.com/ccsd/ledbelly/wiki/Getting-Started)
 
 
 ## License
