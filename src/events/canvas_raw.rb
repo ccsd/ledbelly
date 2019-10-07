@@ -132,7 +132,7 @@ module CanvasRawEvents
 
       bodydata = {
         asset_id:       body['asset_id']&.to_i,
-        asset_name:     body.fetch('asset_name') { body['name'] }&.to_s,
+        asset_name:     body['asset_name']&.to_s,
         asset_type:     body['asset_type']&.to_s,
         asset_subtype:  body['asset_subtype']&.to_s,
         category:       body['category']&.to_s,
@@ -161,7 +161,7 @@ module CanvasRawEvents
         points_possible:        body['points_possible']&.to_f,
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
-        lti_resource_link_id_duplicated_from:  body['lti_resource_link_id_duplicated_from']&.to_s,
+        lti_resource_link_id_duplicated_from: body['lti_resource_link_id_duplicated_from']&.to_s,
         submission_types:       body['submission_types']&.to_s,
       }
 
