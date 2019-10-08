@@ -28,8 +28,8 @@ module CanvasRawEvents
       user_account_id:        meta['user_account_id']&.to_i,
       user_agent:             meta['user_agent']&.to_s,
       user_id_meta:           meta['user_id']&.to_i,
-      user_login:             meta['user_login']&.to_s,
-      user_sis_id:            meta['user_sis_id']&.to_s,
+      user_login_meta:        meta['user_login']&.to_s,
+      user_sis_id_meta:       meta['user_sis_id']&.to_s,
     }
   end
   
@@ -183,7 +183,7 @@ module CanvasRawEvents
         points_possible:        body['points_possible']&.to_f,
         lti_assignment_id:      body['lti_assignment_id']&.to_s,
         lti_resource_link_id:   body['lti_resource_link_id']&.to_s,
-        lti_resource_link_id_duplicated_from:  body['lti_resource_link_id_duplicated_from']&.to_s,
+        lti_resource_link_id_duplicated_from: body['lti_resource_link_id_duplicated_from']&.to_s,
         submission_types:       body['submission_types']&.to_s,
       }
 
@@ -1110,6 +1110,8 @@ module CanvasRawEvents
         workflow_state: body['workflow_state']&.to_s,
         created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+        user_login:     body['user_login']&.to_s,
+        user_sis_id:    body['user_sis_id']&.to_s,
       }
 
     when 'user_updated'
@@ -1122,6 +1124,8 @@ module CanvasRawEvents
         workflow_state: body['workflow_state']&.to_s,
         created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+        user_login:     body['user_login']&.to_s,
+        user_sis_id:    body['user_sis_id']&.to_s,
       }
 
     when 'wiki_page_created'
