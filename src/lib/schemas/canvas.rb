@@ -400,7 +400,7 @@ $schema = {
     session_id: { type: 'string', size: 32 },
     time_zone: { type: 'string', size: 255 },
     url_meta: { type: 'string', size: 'MAX' },
-    user_account_id: { type: 'string', size: 255 },
+    user_account_id: { type: 'bigint' },
     user_agent: { type: 'string', size: 300 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
@@ -2387,6 +2387,8 @@ $schema = {
     workflow_state: { type: 'string', size: 14 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
+    user_login: { type: 'string', size: 64 },
+    user_sis_id: { type: 'string', size: 32 },
   },
 
   live_user_updated: {
@@ -2430,6 +2432,8 @@ $schema = {
     workflow_state: { type: 'string', size: 14 },
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
+    user_login: { type: 'string', size: 64 },
+    user_sis_id: { type: 'string', size: 32 },
   },
 
   live_wiki_page_created: {
