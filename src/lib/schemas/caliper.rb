@@ -164,6 +164,7 @@ $schema = {
     action: { type: 'string', size: 7 },
     actor_entity_id: { type: 'bigint' },
     actor_id: { type: 'string', size: 100 },
+    actor_real_user_id: { type: 'bigint' },
     actor_root_account_id: { type: 'bigint' },
     actor_root_account_lti_guid: { type: 'string', size: 100 },
     actor_root_account_uuid: { type: 'string', size: 40 },
