@@ -29,6 +29,7 @@ module LiveStream
       request_id:             meta['request_id']&.to_s,
       session_id:             meta['session_id']&.to_s,
       url_meta:               meta['url']&.to_s,
+      referrer:               meta['referrer']&.to_s,
       http_method:            meta['http_method']&.to_s,
       developer_key_id:       meta['developer_key_id']&.to_i,
       # assets

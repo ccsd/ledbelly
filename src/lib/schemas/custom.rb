@@ -28,6 +28,7 @@ $schema = {
     request_id: { type: 'string', size: 36 },
     session_id: { type: 'string', size: 32 },
     url_meta: { type: 'string', size: 'MAX' },
+    referrer: { type: 'string', size: 'MAX' },
     http_method: { type: 'string', size: 7 },
     developer_key_id: { type: 'bigint' },
     # assets
