@@ -25,6 +25,7 @@ module CanvasRawEvents
       session_id:             meta['session_id']&.to_s,
       time_zone:              meta['time_zone']&.to_s,
       url_meta:               meta['url']&.to_s,
+      referrer:               meta['referrer']&.to_s,
       user_account_id:        meta['user_account_id']&.to_i,
       user_agent:             meta['user_agent']&.to_s,
       user_id_meta:           meta['user_id']&.to_i,
