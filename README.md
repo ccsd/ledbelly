@@ -43,7 +43,7 @@ __Live Stream__, while LEDbelly will process both Canvas and Caliper formats int
 
 
 ## License
-LEDbelly, is distributed under the  MIT License
+LEDbelly, is distributed under the MIT License
 
 >Copyright (c) 2019 Clark County School District, created by Robert Carroll
 >
@@ -89,6 +89,7 @@ New code should pass the [RuboCop](https://github.com/rubocop-hq/rubocop) rules 
 
 Watch commits to this file, they usually indicate when you'll see new events or columns.
 - [canvas/live_events.rb](https://github.com/instructure/canvas-lms/blob/master/lib/canvas/live_events.rb)
+- [canvas/live_events_spec.rb](https://github.com/instructure/canvas-lms/blob/master/spec/lib/canvas/live_events_spec.rb)
 - Changes to Live Events are also posted to Canvas Release Notes
 
 
