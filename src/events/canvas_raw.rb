@@ -589,6 +589,76 @@ module CanvasRawEvents
         workflow_state:       body['workflow_state']&.to_s,
         max_membership:       body['max_membership']&.to_i,
       }
+    
+    when 'learning_outcome_created'
+
+      bodydata = {
+        learning_outcome_id:              body['learning_outcome_id']&.to_i,
+        context_id:                       body['context_id']&.to_i,
+        context_type:                     body['context_type']&.to_s,
+        display_name:                     body['display_name']&.to_s,
+        short_description:                body['short_description']&.to_s,
+        description:                      body['description']&.to_s,
+        vendor_guid:                      body['vendor_guid']&.to_s,
+        calculation_method:               body['calculation_method']&.to_s,
+        calculation_int:                  body['calculation_int']&.to_s,
+        rubric_criterion_description:     body['rubric_criterion']['description']&.to_s,
+        rubric_criterion_ratings:         body['rubric_criterion']['ratings']&.to_json.to_s,
+        rubric_criterion_mastery_points:  body['rubric_criterion']['mastery_points']&.to_f,
+        rubric_criterion_points_possible: body['rubric_criterion']['points_possible']&.to_f,
+        title:                            body['title']&.to_s,
+        workflow_state:                   body['workflow_state']&.to_s,
+      }
+
+    when 'learning_outcome_group_created'
+
+      bodydata = {
+        learning_outcome_group_id:  body['learning_outcome_group_id']&.to_i,
+        context_id:                 body['context_id']&.to_i,
+        context_type:               body['context_type']&.to_s,
+        title:                      body['title']&.to_s,
+        description:                body['description']&.to_s,
+        vendor_guid:                body['vendor_guid']&.to_s,
+        parent_outcome_group_id:    body['parent_outcome_group_id']&.to_i,
+        workflow_state:             body['workflow_state']&.to_s,
+      }
+
+    when 'learning_outcome_group_updated'
+
+      bodydata = {
+        learning_outcome_group_id:  body['learning_outcome_group_id']&.to_i,
+        context_id:                 body['context_id']&.to_i,
+        context_type:               body['context_type']&.to_s,
+        title:                      body['title']&.to_s,
+        description:                body['description']&.to_s,
+        vendor_guid:                body['vendor_guid']&.to_s,
+        parent_outcome_group_id:    body['parent_outcome_group_id']&.to_i,
+        workflow_state:             body['workflow_state']&.to_s,
+        updated_at:                 body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+      }
+
+    when 'learning_outcome_link_created'
+
+      bodydata = {
+        learning_outcome_link_id:   body['learning_outcome_link_id']&.to_i,
+        learning_outcome_id:        body['learning_outcome_id']&.to_i,
+        learning_outcome_group_id:  body['learning_outcome_group_id']&.to_i,
+        context_id:                 body['context_id']&.to_i,
+        context_type:               body['context_type']&.to_s,
+        workflow_state:             body['workflow_state']&.to_s,
+      }
+
+    when 'learning_outcome_link_updated'
+
+      bodydata = {
+        learning_outcome_link_id:   body['learning_outcome_link_id']&.to_i,
+        learning_outcome_id:        body['learning_outcome_id']&.to_i,
+        learning_outcome_group_id:  body['learning_outcome_group_id']&.to_i,
+        context_id:                 body['context_id']&.to_i,
+        context_type:               body['context_type']&.to_s,
+        workflow_state:             body['workflow_state']&.to_s,
+        updated_at:                 body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+      }
 
     when 'learning_outcome_result_created'
 
@@ -623,6 +693,27 @@ module CanvasRawEvents
         title:                body['title']&.to_s,
         percent:              body['percent']&.to_f,
         updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+      }
+
+    when 'learning_outcome_updated'
+    
+      bodydata = {
+        learning_outcome_id:              body['learning_outcome_id']&.to_i,
+        context_id:                       body['context_id']&.to_i,
+        context_type:                     body['context_type']&.to_s,
+        display_name:                     body['display_name']&.to_s,
+        short_description:                body['short_description']&.to_s,
+        description:                      body['description']&.to_s,
+        vendor_guid:                      body['vendor_guid']&.to_s,
+        calculation_method:               body['calculation_method']&.to_s,
+        calculation_int:                  body['calculation_int']&.to_i,
+        rubric_criterion_description:     body['rubric_criterion']['description']&.to_s,
+        rubric_criterion_ratings:         body['rubric_criterion']['ratings']&.to_json.to_s,
+        rubric_criterion_mastery_points:  body['rubric_criterion']['mastery_points']&.to_f,
+        rubric_criterion_points_possible: body['rubric_criterion']['points_possible']&.to_f,
+        title:                            body['title']&.to_s,
+        workflow_state:                   body['workflow_state']&.to_s,
+        updated_at:                       body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
     when 'logged_in'
@@ -906,6 +997,7 @@ module CanvasRawEvents
     when 'quizzes.qti_import_completed'
 
       bodydata = {
+        qti_type: body['qti_type']&.to_s,
         quiz_id:  body['quiz_id']&.to_i,
         success:  body['success']&.to_s,
       }
