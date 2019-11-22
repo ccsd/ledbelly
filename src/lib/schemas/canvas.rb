@@ -1148,6 +1148,7 @@ $schema = {
     # body
     submission_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
+    assignment_name: { type: 'string', size: 255, mbstr: true },
     grade: { type: 'string', size: 80 },
     old_grade: { type: 'string', size: 80 },
     score: { type: 'float', size: 53 },

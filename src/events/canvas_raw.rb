@@ -502,6 +502,7 @@ module CanvasRawEvents
       bodydata = {
         submission_id:        body['submission_id']&.to_i,
         assignment_id:        body['assignment_id']&.to_i,
+        assignment_name:      body['assignment_name']&.to_s,
         grade:                body['grade']&.to_s,
         old_grade:            body['old_grade']&.to_s,
         score:                body['score']&.to_f,
