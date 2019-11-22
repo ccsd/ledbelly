@@ -286,6 +286,8 @@ module IMSCaliperEvents
     
     when 'syllabus_updated'
       specific = {
+        job_id:                 data['job_id']&.to_s,
+        job_tag:                data['job_tag']&.to_s,
         object_creators_id:     data['object_creators_id']&.to_s,
         object_creators_type:   data['object_creators_type']&.to_s,
       }
