@@ -1671,7 +1671,7 @@ $schema = {
     user_sis_id_meta: { type: 'string', size: 32 },
     # body
     learning_outcome_id: { type: 'bigint' },
-    mastery: { type: 'int' },
+    mastery: { type: 'string', size: 5 },
     score: { type: 'float', size: 53 },
     created_at: { type: 'datetime' },
     attempt: { type: 'int' },
@@ -1717,7 +1717,7 @@ $schema = {
     user_sis_id_meta: { type: 'string', size: 32 },
     # body
     learning_outcome_id: { type: 'bigint' },
-    mastery: { type: 'int' },
+    mastery: { type: 'string', size: 5 },
     score: { type: 'float', size: 53 },
     created_at: { type: 'datetime' },
     attempt: { type: 'int' },

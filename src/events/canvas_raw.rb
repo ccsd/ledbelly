@@ -665,7 +665,7 @@ module CanvasRawEvents
 
       bodydata = {
         learning_outcome_id:  body['learning_outcome_id']&.to_i,
-        mastery:              body['mastery']&.to_i,
+        mastery:              body['mastery']&.to_s,
         score:                body['score']&.to_f,
         created_at:           body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         attempt:              body['attempt']&.to_i,
@@ -682,7 +682,7 @@ module CanvasRawEvents
 
       bodydata = {
         learning_outcome_id:  body['learning_outcome_id']&.to_i,
-        mastery:              body['mastery']&.to_i,
+        mastery:              body['mastery']&.to_s,
         score:                body['score']&.to_f,
         created_at:           body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         attempt:              body['attempt']&.to_i,
