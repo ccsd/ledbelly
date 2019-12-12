@@ -94,10 +94,10 @@ module CanvasRawEvents
     if missing.size.positive?
       sample = missing.map { |k| "#{k}:::#{sent['metadata'].fetch(k)}" }
       err = <<~ERRLOG
-          event_name: #{sent['metadata']['event_name']}
+          event_name: live_#{sent['metadata']['event_name']}
           count: { sent: #{sent['metadata'].keys.count}, defined: #{normal_meta.count} }
-          summary: { event_name: #{sent['metadata']['event_name']}, undefined: #{missing.to_s.gsub('"', '')} }
-          sample: { event_name: #{sent['metadata']['event_name']}, undefined: #{sample} }
+          summary: { event_name: live_#{sent['metadata']['event_name']}, undefined: #{missing.to_s.gsub('"', '')} }
+          sample: { event_name: live_#{sent['metadata']['event_name']}, undefined: #{sample} }
           message: #{sent.to_json}
 
       ERRLOG
