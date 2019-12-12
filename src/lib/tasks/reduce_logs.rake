@@ -38,8 +38,8 @@ task :reduce_logs do
         event_name_str, undefined = match.captures
         event_name = event_name_str.to_sym
         updates[event_name] ||= {}
-        sample = undefined.delete('"').delete(' ').split(',')
-
+        #sample = undefined.delete('"').delete(' ').split(',')
+        sample = undefined[1..-1].split('", "') 
         sample.each do |s|
           column_str, value = s.strip.split(':::')
           column = column_str.to_sym
@@ -56,7 +56,7 @@ task :reduce_logs do
     end
     puts "\n\n### updates for events, columns not defined"
     updates.each do |event_name, columns|
-      puts "live_#{event_name}"
+      puts "#{event_name}"
       columns.each do |column, params|
         puts "    #{column}: { type: '#{params[:type]}', size: #{params[:size]} } # #{params[:value]}"
       end
@@ -71,7 +71,7 @@ task :reduce_logs do
   def sql_truncations
     updates = {}
     open_log("log/sql-truncations.log")&.each_line do |line|
-      if match = line.match(/(live_[a-z_]+).([a-z_]+) {\ssupplied: (\d+), expecting: (\d+) }/i)
+      if match = line.match(/([a-z_]+).([a-z_]+) {\ssupplied: (\d+), expecting: (\d+) }/i)
         event_name_str, column_str, supplied, expected = match.captures
         column = column_str.to_sym
         event_name = event_name_str.to_sym

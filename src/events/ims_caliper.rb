@@ -1,3 +1,5 @@
+require 'pp'
+
 module IMSCaliperEvents
 
   # flattens the nested/recursive data structure of IMS Caliper events to underscore_notation
@@ -30,12 +32,39 @@ module IMSCaliperEvents
     end
   end
   
+  def caliper_count(event_name, sent, expected)
+    
+    # original hash, cloned, compact (no nil), strings, keys
+    copy_sent = sent.clone.compact.stringify_keys.keys
+    copy_expected = expected.clone.stringify_keys.keys
+    
+    # what's missing, get the difference
+    missing = copy_sent - copy_expected # | copy_expected - copy_sent
+    missing = missing.reject { |k| ['id'].include? k }
+    if missing.size.positive?
+      sample = missing.map { |k| "#{k}:::#{sent.fetch(k)}"}
+      err = <<~ERRLOG
+          event_name: ims_#{event_name}
+          count: { sent: #{sent.keys.count}, defined: #{copy_expected.count} }
+          summary: { event_name: ims_#{event_name}, undefined: #{missing.to_s.gsub('"', '')} }
+          sample: { event_name: ims_#{event_name}, undefined: #{sample} }
+          message: #{sent.to_json}
+
+      ERRLOG
+      # store in log file
+      open('log/ddl-undefined.log', 'a') do |f|
+        f << err
+      end
+      puts err if $stdout.isatty
+    end
+  end
+
   # handle ims caliper
   def ims_caliper(event_name, event_time, event_data)
     
     data = _squish(event_data['data'][0])
 
-    shared = {
+    common = {
       uuid:                           data['id']&.to_s,
       action:                         data['action']&.to_s,
       actor_entity_id:                data['actor_entity_id']&.to_i,
@@ -46,6 +75,9 @@ module IMSCaliperEvents
       actor_root_account_uuid:        data['actor_root_account_uuid']&.to_s,
       actor_type:                     data['actor_type']&.to_s,
       actor_user_login:               data['actor_user_login']&.to_s,
+      actor_user_sis_id:              data['actor_user_sis_id']&.to_s,
+      client_ip:                      data['client_ip']&.to_s,
+      context:                        data['context']&.to_s,
       edapp_id:                       data['edapp_id']&.to_s,
       edapp_type:                     data['edapp_type']&.to_s,
       eventtime:                      data['eventtime'].nil? ? nil : default_timezone(data['eventtime']),
@@ -67,6 +99,8 @@ module IMSCaliperEvents
       object_entity_id:               data['object_entity_id']&.to_i,
       object_name:                    data['object_name']&.to_s,
       object_type:                    data['object_type']&.to_s,
+      referrer:                       data['referrer']&.to_s,
+      request_url:                    data['request_url']&.to_s,
       request_id:                     data['request_id']&.to_s,
       session_id:                     data['session_id']&.to_s,
       session_type:                   data['session_type']&.to_s,
@@ -79,8 +113,16 @@ module IMSCaliperEvents
 
     when 'asset_accessed'
       specific = {
-        object_asset_type:    data['object_asset_type']&.to_s,
-        object_asset_subtype: data['object_asset_subtype']&.to_s,
+        object_asset_name:          data['object_asset_name']&.to_s,
+        object_asset_subtype:       data['object_asset_subtype']&.to_s,
+        object_asset_type:          data['object_asset_type']&.to_s,
+        object_context_account_id:  data['object_context_account_id']&.to_i,
+        object_developer_key_id:    data['object_developer_key_id']&.to_i,
+        object_display_name:        data['object_display_name']&.to_s,
+        object_domain:              data['object_domain']&.to_s,
+        object_filename:            data['object_filename']&.to_s,
+        object_http_method:         data['object_http_method']&.to_s,
+        object_url:                 data['object_url']&.to_s,
       }
     
     when 'assignment_created'
@@ -99,6 +141,7 @@ module IMSCaliperEvents
         object_datemodified:        data['object_datemodified'].nil? ? nil : default_timezone(data['object_datemodified']),
         object_workflow_state:      data['object_workflow_state']&.to_s,
         object_datetosubmit:        data['object_datetosubmit'].nil? ? nil : default_timezone(data['object_datetosubmit']),
+        object_maxscore:            data['object_maxscore']&.to_f,
         object_maxscore_numberstr:  data['object_maxscore_numberstr']&.to_f,
         object_lock_at:             data['object_lock_at'].nil? ? nil : default_timezone(data['object_lock_at']),
         object_datetoshow:          data['object_datetoshow'].nil? ? nil : default_timezone(data['object_datetoshow']),
@@ -224,7 +267,11 @@ module IMSCaliperEvents
       }
     
     when 'group_created'
-      specific = {}
+      specific = {
+        object_ispartof_id:                   data['object_ispartof_id']&.to_s,
+        object_ispartof_name:                 data['object_ispartof_name']&.to_s,
+        object_ispartof_type:                 data['object_ispartof_type']&.to_s,
+      }
 
     when 'group_category_created'
       specific = {}
@@ -286,10 +333,9 @@ module IMSCaliperEvents
     
     when 'syllabus_updated'
       specific = {
-        job_id:                 data['job_id']&.to_s,
-        job_tag:                data['job_tag']&.to_s,
         object_creators_id:     data['object_creators_id']&.to_s,
         object_creators_type:   data['object_creators_type']&.to_s,
+        object_body:            data['object_body']&.to_s,
       }
 
     when 'user_account_association_created'
@@ -320,11 +366,12 @@ module IMSCaliperEvents
       return
     end
 
-    # merge the shared fields with the event specific data
-    import_data = specific.merge(shared)
+    # merge the common fields with the event specific data
+    import_data = specific.merge(common)
     # import to db
     import(event_name, event_time, event_data, import_data, true)
     # check if we missed any new data
     # bodycount(event_data, bodydata)
+    caliper_count(event_name, data, import_data)
   end
 end
