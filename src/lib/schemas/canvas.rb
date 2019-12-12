@@ -1117,7 +1117,7 @@ $schema = {
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
-     client_ip: { type: 'string', size: 39 },
+    client_ip: { type: 'string', size: 39 },
     context_account_id: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_meta: { type: 'string', size: 24 },
@@ -1464,7 +1464,7 @@ $schema = {
     rubric_criterion_description: { type: 'string', size: 255 },
     rubric_criterion_ratings: { type: 'string', size: 1000 },
     rubric_criterion_mastery_points: { type: 'float', size: 53 },
-    rubric_criterion_points_possible: {  type: 'float', size: 53 },
+    rubric_criterion_points_possible: { type: 'float', size: 53 },
     title: { type: 'string', size: 255 },
     workflow_state: { type: 'string', size: 6 },
   },
@@ -2716,7 +2716,7 @@ $schema = {
     processed_at: { type: 'datetime' },
     event_time_local: { type: 'datetime' },
     # metadata
-     client_ip: { type: 'string', size: 39 },
+    client_ip: { type: 'string', size: 39 },
     context_account_id: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_meta: { type: 'string', size: 24 },
