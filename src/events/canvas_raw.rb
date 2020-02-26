@@ -217,6 +217,35 @@ module CanvasRawEvents
         integration_data:      body['integration_data']&.to_s,
         rules:                 body['rules']&.to_s,
       }
+    
+    when 'assignment_override_created'
+      
+      bodydata = {
+        assignment_override_id: body['assignment_override_id']&.to_i,
+        assignment_id:          body['assignment_id']&.to_i,
+        due_at:                 body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        all_day:                body['all_day']&.to_s,
+        all_day_date:           body['all_day_date'].nil? ? nil : default_timezone(body['all_day_date']),
+        unlock_at:              body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:                body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        type:                   body['type']&.to_s,
+        workflow_state:         body['workflow_state']&.to_s,
+      }
+
+    when 'assignment_override_updated'
+
+      bodydata = {
+        assignment_override_id: body['assignment_override_id']&.to_i,
+        assignment_id:          body['assignment_id']&.to_i,
+        due_at:                 body['due_at'].nil? ? nil : default_timezone(body['due_at']),
+        all_day:                body['all_day']&.to_s,
+        all_day_date:           body['all_day_date'].nil? ? nil : default_timezone(body['all_day_date']),
+        unlock_at:              body['unlock_at'].nil? ? nil : default_timezone(body['unlock_at']),
+        lock_at:                body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
+        type:                   body['type']&.to_s,
+        workflow_state:         body['workflow_state']&.to_s,
+        course_section_id:      body['course_section_id']&.to_s,
+      }
 
     when 'attachment_created'
 
@@ -305,6 +334,24 @@ module CanvasRawEvents
         created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
         updated_at:     body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
         workflow_state: body['workflow_state']&.to_s,
+      }
+
+    when 'course_grade_change'
+
+      bodydata = {
+        user_id:                    body['user_id']&.to_i,  
+        course_id:                  body['course_id']&.to_i,
+        workflow_state:             body['workflow_state']&.to_s,
+        created_at:                 body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        updated_at:                 body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+        current_score:              body['current_score']&.to_f,
+        old_current_score:          body['old_current_score']&.to_f,
+        final_score:                body['final_score']&.to_f,
+        old_final_score:            body['old_final_score']&.to_f,
+        unposted_current_score:     body['unposted_current_score']&.to_f,
+        old_unposted_current_score: body['old_unposted_current_score']&.to_f,
+        unposted_final_score:       body['unposted_final_score']&.to_f,
+        old_unposted_final_score:   body['old_unposted_final_score']&.to_f,
       }
 
     when 'course_progress'
@@ -1124,6 +1171,94 @@ module CanvasRawEvents
         outcome_alignment_set_guid:     body['outcome_alignment_set_guid']&.to_s,
       }
     
+    when 'quiz_caliper.quiz_session_created'
+      
+      bodydata = {
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        end_at:         body['end_at'].nil? ? nil : default_timezone(body['end_at']),
+        id:             body['id']&.to_i,
+        start_at:       body['start_at'].nil? ? nil : default_timezone(body['start_at']),
+        status:         body['status']&.to_s,
+        submitted_at:   body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
+      }
+    
+    when 'quiz_caliper.quiz_session_updated'
+      
+      bodydata = {
+        created_at:     body['created_at'].nil? ? nil : default_timezone(body['created_at']),
+        end_at:         body['end_at'].nil? ? nil : default_timezone(body['end_at']),
+        id:             body['id']&.to_i,
+        start_at:       body['start_at'].nil? ? nil : default_timezone(body['start_at']),
+        status:         body['status']&.to_s,
+        submitted_at:   body['submitted_at'].nil? ? nil : default_timezone(body['submitted_at']),
+      }
+    
+    when 'quiz_caliper.asset_accessed'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+      }
+    
+    when 'quiz_caliper.quiz_created'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+      }
+
+    when 'quiz_caliper.quiz_started'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+      }
+    
+    when 'quiz_caliper.quiz_submitted'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+      }
+    
+    when 'quiz_caliper.quiz_updated'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+      }
+    
+    when 'quiz_caliper.item_created'
+      
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+        label:   body['label']&.to_s,
+      }
+    
+    when 'quiz_caliper.item_updated'
+      bodydata = {
+        id:      body['id']&.to_i,
+        title:   body['title']&.to_s,
+        label:   body['label']&.to_s,
+      }
+
+    when 'sis_batch_created'
+
+      bodydata = {
+        sis_batch_id:     body['sis_batch_id']&.to_s,
+        account_id:       body['account_id']&.to_i,
+        workflow_state:   body['workflow_state']&.to_s,
+      }
+
+    when 'sis_batch_updated'
+
+      bodydata = {
+        sis_batch_id:     body['sis_batch_id']&.to_s,
+        account_id:       body['account_id']&.to_i,
+        workflow_state:   body['workflow_state']&.to_s,
+      }
+
     when 'submission_comment_created'
 
       bodydata = {
@@ -1153,6 +1288,8 @@ module CanvasRawEvents
         attempt:            body['attempt']&.to_i,
         lti_assignment_id:  body['lti_assignment_id']&.to_s,
         group_id:           body['group_id']&.to_i,
+        late:               body['late']&.to_s,
+        missing:            body['missing']&.to_s,
       }
 
     when 'submission_updated'
@@ -1173,6 +1310,8 @@ module CanvasRawEvents
         url:                body['url']&.to_s,
         attempt:            body['attempt']&.to_i,
         group_id:           body['group_id']&.to_i,
+        late:               body['late']&.to_s,
+        missing:            body['missing']&.to_s,
       }
 
     when 'syllabus_updated'

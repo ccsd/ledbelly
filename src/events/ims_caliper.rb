@@ -1,5 +1,3 @@
-require 'pp'
-
 module IMSCaliperEvents
 
   # flattens the nested/recursive data structure of IMS Caliper events to underscore_notation
@@ -128,6 +126,7 @@ module IMSCaliperEvents
     when 'assignment_created'
       specific = {
         object_datecreated:         data['object_datecreated'].nil? ? nil : default_timezone(data['object_datecreated']),
+        object_maxscore:            data['object_maxscore']&.to_f,
         object_maxscore_numberstr:  data['object_maxscore_numberstr']&.to_f,
         object_description:         data['object_description']&.to_s,
         object_lock_at:             data['object_lock_at'].nil? ? nil : default_timezone(data['object_lock_at']),
@@ -147,6 +146,36 @@ module IMSCaliperEvents
         object_datetoshow:          data['object_datetoshow'].nil? ? nil : default_timezone(data['object_datetoshow']),
       }
     
+    when 'assignment_override_created'
+      specific = {
+        object_assignment_id:      data['object_assignment_id']&.to_i,
+        object_all_day_date:       data['object_all_day_date'].nil? ? nil : default_timezone(data['object_all_day_date']),
+        object_all_day:            data['object_all_day']&.to_s,
+        object_course_section_id:  data['object_course_section_id']&.to_s,
+        object_datetoshow:         data['object_datetoshow'].nil? ? nil : default_timezone(data['object_datetoshow']),
+        object_datetosubmit:       data['object_datetosubmit'].nil? ? nil : default_timezone(data['object_datetosubmit']),
+        object_group_id:           data['object_group_id']&.to_i,
+        object_lock_at:            data['object_lock_at'].nil? ? nil : default_timezone(data['object_lock_at']),
+        object_workflow_state:     data['object_workflow_state']&.to_s,
+        membership_organization_suborganizationof_id: data['membership_organization_suborganizationof_id']&.to_s,
+        membership_organization_suborganizationof_type: data['membership_organization_suborganizationof_type']&.to_s,
+      }
+    
+    when 'assignment_override_updated'
+      specific = {
+        object_assignment_id:      data['object_assignment_id']&.to_i,
+        object_all_day_date:       data['object_all_day_date'].nil? ? nil : default_timezone(data['object_all_day_date']),
+        object_all_day:            data['object_all_day']&.to_s,
+        object_course_section_id:  data['object_course_section_id']&.to_s,
+        object_datetoshow:         data['object_datetoshow'].nil? ? nil : default_timezone(data['object_datetoshow']),
+        object_datetosubmit:       data['object_datetosubmit'].nil? ? nil : default_timezone(data['object_datetosubmit']),
+        object_group_id:           data['object_group_id']&.to_i,
+        object_lock_at:            data['object_lock_at'].nil? ? nil : default_timezone(data['object_lock_at']),
+        object_workflow_state:     data['object_workflow_state']&.to_s,
+        membership_organization_suborganizationof_id: data['membership_organization_suborganizationof_id']&.to_s,
+        membership_organization_suborganizationof_type: data['membership_organization_suborganizationof_type']&.to_s,
+      }
+
     when 'attachment_created'
       specific = {
         object_datecreated:   data['object_datecreated'].nil? ? nil : default_timezone(data['object_datecreated']),
@@ -287,6 +316,7 @@ module IMSCaliperEvents
         object_organization_ispartof_type:  data['object_organization_ispartof_type']&.to_s,
         object_organization_name:           data['object_organization_name']&.to_s,
         object_organization_type:           data['object_organization_type']&.to_s,
+        object_roles:                       data['object_roles']&.to_s,
       }
 
     when 'logged_in'

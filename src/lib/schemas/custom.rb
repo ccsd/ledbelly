@@ -14,7 +14,7 @@ $schema = {
     user_login_meta: { type: 'string', size: 64 },
     user_sis_id_meta: { type: 'string', size: 32 },
     user_account_id: { type: 'bigint' },
-    user_agent: { type: 'string', size: 300 },
+    user_agent: { type: 'string', size: 512 },
     context_id_body: { type: 'bigint' },
     context_id_meta: { type: 'bigint' },
     context_role_body: { type: 'string', size: 24 },
