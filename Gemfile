@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 # core
 gem 'activesupport'
 gem 'aws-sdk-sqs'
-gem 'rake'
 gem 'sequel'
 gem 'shoryuken'
 gem 'tiny_tds'
@@ -15,5 +14,9 @@ gem 'tiny_tds'
 # gem 'maxmind-db'
 
 # rake and tasks
+gem "rake", ">= 12.3.3"
 gem 'hashdiff'
+gem 'jaro_winkler'
+
+# code contributing
 gem 'rubocop'
