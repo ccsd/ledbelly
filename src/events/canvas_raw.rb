@@ -1,3 +1,4 @@
+
 module CanvasRawEvents
 
   # collect and return all possible message data fields
@@ -19,7 +20,7 @@ module CanvasRawEvents
       producer:               meta['producer']&.to_s,
       real_user_id:           meta['real_user_id']&.to_i,
       request_id:             meta['request_id']&.to_s,
-      root_account_id:        meta['root_account_id']&.to_i,
+      root_account_id_meta:   meta['root_account_id']&.to_i,
       root_account_lti_guid:  meta['root_account_lti_guid']&.to_s,
       root_account_uuid:      meta['root_account_uuid']&.to_s,
       session_id:             meta['session_id']&.to_s,
@@ -32,81 +33,6 @@ module CanvasRawEvents
       user_login_meta:        meta['user_login']&.to_s,
       user_sis_id_meta:       meta['user_sis_id']&.to_s,
     }
-  end
-  
-  def bodycount(event_data, bodydata)
-    if event_data['body'].keys.count > bodydata.keys.count
-
-      ed = event_data.clone
-      md = ed['metadata']
-      eb = ed['body']
-      bd = bodydata.clone.stringify_keys
-
-      # compare the original message body with the fields for import, what keys are in one hash only?
-      test = (eb.keys - bd.keys) | (bd.keys - eb.keys)
-      flagged = false
-      sample = []
-      # check the missing keys
-      test.each do |k|
-        # if the missing key is in the metadata
-        if md.key?(k)
-          # compare the values, flag if they aren't the same
-          if eb[k] == md[k]
-            flagged = true
-          end
-        # the missing key is not in the metadata, flag, because we found new data
-        else
-          flagged = true
-        end
-        sample << "#{k}:::#{ed['body'].fetch(k) { ed['metadata'].fetch(k) }&.to_s}"
-      end
-      if flagged == true
-        err = <<~ERRLOG
-            event_name: #{ed['metadata']['event_name']}
-            count: { sent: #{ed['body'].keys.count}, defined: #{bodydata.keys.count} }
-            summary: { event_name: #{ed['metadata']['event_name']}, undefined: #{test.to_s.gsub('"', '')} }
-            sample: { event_name: #{ed['metadata']['event_name']}, undefined: #{sample} }
-            message: #{ed.to_json}
-
-        ERRLOG
-        # store in log file
-        open('log/ddl-undefined.log', 'a') do |f|
-          f << err
-        end
-        puts err if $stdout.isatty
-      end
-    end
-  end
-
-  def missing_meta(sent, expected)
-
-    # original hash, cloned, compact (no nil), strings, keys
-    sent_meta = sent['metadata'].clone.compact.stringify_keys.keys
-    collected_meta = expected.clone.stringify_keys.keys
-    
-    # normalize the key names, since we've added _meta to some
-    normal_meta = collected_meta.map{ |k| k.gsub(/_meta/, '')}
-    
-    # what's missing, get the difference
-    missing = sent_meta - normal_meta | normal_meta - sent_meta
-
-    # store in log file
-    if missing.size.positive?
-      sample = missing.map { |k| "#{k}:::#{sent['metadata'].fetch(k)}" }
-      err = <<~ERRLOG
-          event_name: live_#{sent['metadata']['event_name']}
-          count: { sent: #{sent['metadata'].keys.count}, defined: #{normal_meta.count} }
-          summary: { event_name: live_#{sent['metadata']['event_name']}, undefined: #{missing.to_s.gsub('"', '')} }
-          sample: { event_name: live_#{sent['metadata']['event_name']}, undefined: #{sample} }
-          message: #{sent.to_json}
-
-      ERRLOG
-      # store in log file
-      open('log/ddl-undefined.log', 'a') do |f|
-        f << err
-      end
-      puts err if $stdout.isatty
-    end
   end
   
   def canvas_raw(event_name, event_time, event_data)
@@ -142,6 +68,9 @@ module CanvasRawEvents
         filename:       body['filename']&.to_s,
         display_name:   body['display_name']&.to_s,
         domain:         body['domain']&.to_s,
+        url:            body['url']&.to_s,
+        enrollment_id:  body['enrollment_id']&.to_i,
+        section_id:     body['section_id']&.to_i,
       }
 
     when 'assignment_created'
@@ -201,6 +130,7 @@ module CanvasRawEvents
         sis_source_id:         body['sis_source_id']&.to_s,
         integration_data:      body['integration_data']&.to_s,
         rules:                 body['rules']&.to_s,
+        workflow_state:         body['workflow_state']&.to_s,
       }
 
     when 'assignment_group_updated'
@@ -216,6 +146,7 @@ module CanvasRawEvents
         sis_source_id:         body['sis_source_id']&.to_s,
         integration_data:      body['integration_data']&.to_s,
         rules:                 body['rules']&.to_s,
+        workflow_state:         body['workflow_state']&.to_s,
       }
     
     when 'assignment_override_created'
@@ -230,6 +161,7 @@ module CanvasRawEvents
         lock_at:                body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
         type:                   body['type']&.to_s,
         workflow_state:         body['workflow_state']&.to_s,
+        course_section_id:      body['course_section_id']&.to_s,
       }
 
     when 'assignment_override_updated'
@@ -358,6 +290,7 @@ module CanvasRawEvents
 
       bodydata = {
         # body progress
+        error_message:                body['progress']['error'].nil? ? nil : body['progress']['error']['message'].to_s,
         requirement_count:            body['progress']['requirement_count'].nil? ? nil : body['progress']['requirement_count'].to_i,
         requirement_completed_count:  body['progress']['requirement_completed_count'].nil? ? nil : body['progress']['requirement_completed_count'].to_i,
         next_requirement_url:         body['progress']['next_requirement_url'].nil? ? nil : body['progress']['next_requirement_url'].to_s,
@@ -378,6 +311,7 @@ module CanvasRawEvents
         sis_source_id:                          body['sis_source_id']&.to_s,
         sis_batch_id:                           body['sis_batch_id']&.to_s,
         course_id:                              body['course_id']&.to_i,
+        root_account_id:                        body['root_account_id']&.to_i,
         enrollment_term_id:                     body['enrollment_term_id']&.to_s,
         name:                                   body['name']&.to_s,
         default_section:                        body['default_section']&.to_s,
@@ -399,6 +333,7 @@ module CanvasRawEvents
         sis_source_id:                          body['sis_source_id']&.to_s,
         sis_batch_id:                           body['sis_batch_id']&.to_s,
         course_id:                              body['course_id']&.to_i,
+        root_account_id:                        body['root_account_id']&.to_i,
         enrollment_term_id:                     body['enrollment_term_id']&.to_s,
         name:                                   body['name']&.to_s,
         default_section:                        body['default_section']&.to_s,
@@ -835,6 +770,8 @@ module CanvasRawEvents
         attempt:            body['attempt']&.to_i,
         lti_assignment_id:  body['lti_assignment_id']&.to_s,
         group_id:           body['group_id']&.to_i,
+        late:               body['late']&.to_s,
+        missing:            body['missing']&.to_s,
       }
 
     when 'quiz_export_complete'
@@ -1034,12 +971,13 @@ module CanvasRawEvents
     when 'quizzes_next_quiz_duplicated'
 
       bodydata = {
-        new_assignment_id:          body['new_assignment_id']&.to_i,
-        original_course_uuid:       body['original_course_uuid']&.to_s,
-        original_resource_link_id:  body['original_resource_link_id']&.to_s,
-        new_course_uuid:            body['new_course_uuid']&.to_s,
-        new_course_id:              body['new_course_id']&.to_s,
-        new_resource_link_id:       body['new_resource_link_id']&.to_s,
+        new_assignment_id:            body['new_assignment_id']&.to_i,
+        original_course_uuid:         body['original_course_uuid']&.to_s,
+        original_resource_link_id:    body['original_resource_link_id']&.to_s,
+        new_course_uuid:              body['new_course_uuid']&.to_s,
+        new_course_resource_link_id:  body['new_course_resource_link_id']&.to_s,
+        new_course_id:                body['new_course_id']&.to_s,
+        new_resource_link_id:         body['new_resource_link_id']&.to_s,
       }
 
     when 'quizzes.qti_import_completed'
@@ -1398,6 +1336,6 @@ module CanvasRawEvents
     # import to db
     import(event_name, event_time, event_data, import_data, false)
     # check if we missed any new data
-    bodycount(event_data, bodydata)
+    missing_body(event_data, bodydata)
   end
 end

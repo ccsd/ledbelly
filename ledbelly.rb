@@ -2,6 +2,7 @@ require 'shoryuken'
 require 'sequel'
 require 'logger'
 require_relative 'src/ledbelly_settings'
+require_relative 'src/ledbelly_support'
 require_relative 'src/ledbelly_worker'
 
 # terminal output, if terminal/interactive
