@@ -1,7 +1,7 @@
 require_relative 'events/canvas_raw'
 require_relative 'events/ims_caliper'
-require_relative 'ext/live_stream'
 require_relative 'actions/import_sql'
+require_relative 'actions/live_stream'
 
 class LiveEvents
   include Shoryuken::Worker
