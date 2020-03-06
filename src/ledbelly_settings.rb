@@ -50,7 +50,7 @@ end
 
 # collects everythig in lib/schemas and compiles it into 1 large hash
 ddl_stack = {}
-Dir.glob('./src/lib/schemas/*.rb') do |schema|
+Dir.glob('./src/schemas/*.rb') do |schema|
   require schema
   ddl_stack = ddl_stack.merge!($schema)
 end
