@@ -10,6 +10,9 @@ class LiveEvents
 
   shoryuken_options queue: SQS_CFG['queues'][0], auto_delete: true
 
+  # terminal output, if terminal/interactive
+  puts 'LEDbelly loaded, consuming events...' if $stdout.isatty
+
   # https://github.com/phstc/shoryuken/wiki/Worker-options#body_parser
   shoryuken_options body_parser: :json
   shoryuken_options body_parser: ->(sqs_msg){ REXML::Document.new(sqs_msg.body) }
