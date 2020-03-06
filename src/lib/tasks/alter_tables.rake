@@ -1,8 +1,9 @@
 require 'hashdiff'
+require 'jaro_winkler'
 
 task :alter_tables do
 
-  DB_CFG = YAML.load_file('./cfg/database.yml')
+  #DB_CFG = YAML.load_file('./cfg/database.yml')
 
   def sql_to_hash(log)
     out = {}
@@ -21,13 +22,13 @@ task :alter_tables do
     out
   end
 
-  def alter_tables_sql(diff)
+  def alter_tables_sql(diff, old_ddl, new_ddl)
     changes = {create: [], add: [], modify: [], rename: [], drop: [], double_check: []}
     renamed = []
     diff.each_with_index do |change, i|
       table_name, column_name = change[1].split('.')
       datatype = change.last
-      
+
       case change.first
       # modify
       when '~'
@@ -43,11 +44,20 @@ task :alter_tables do
         next_change = diff[i+1]
         next_table_name, next_column_name = next_change[1].split('.')
         next_datatype = next_change.last
-        if [table_name, datatype] == [next_table_name, next_datatype] && column_name != next_column_name
+        
+        # might be a column rename if...
+        rename_if = {
+          table_and_datatype_length: [table_name, datatype] == [next_table_name, next_datatype],
+          table_and_datatype: [table_name, datatype.gsub(/(\W|\d)/, "")] == [next_table_name, next_datatype.gsub(/(\W|\d)/, "")],
+          same_table_key_index: column_key_compare([table_name, column_name], [next_table_name, next_column_name], old_ddl, new_ddl),
+          jw_distance: rename_weight(change, next_change)
+        }.select { |k,v| v == true }
+        # at least 2 of the 4
+        if rename_if.size >= 2
           if ['tinytds'].include?(DB_CFG['adapter'])
             changes[:rename] << "EXEC sp_rename '#{table_name}.#{column_name}', '#{next_column_name}', 'COLUMN';"
           elsif ['mysql2'].include?(DB_CFG['adapter'])
-            changes[:rename] << "ALTER TABLE #{table_name} CHANGE COLUMN #{column_name} TO #{next_column_name};"
+            changes[:rename] << "ALTER TABLE #{table_name} CHANGE COLUMN `#{column_name}` `#{next_column_name}` #{next_datatype};"
           elsif ['oracle', 'postgres'].include?(DB_CFG['adapter'])
             changes[:rename] << "ALTER TABLE #{table_name} RENAME COLUMN #{column_name} TO #{next_column_name};"
           end
@@ -80,6 +90,18 @@ task :alter_tables do
     changes
   end
 
+  def column_key_compare(change, next_change, old_ddl, new_ddl)
+    # get the hash key index of the current column, in the old schema
+    column_idx = old_ddl.dig(change[0].to_sym).find_index { |k,_| k== change[1].to_sym }
+    # get the has key index of the next column, in the new schema
+    next_column_idx = new_ddl.dig(next_change[0].to_sym).find_index { |k,_| k== next_change[1].to_sym }
+    column_idx == next_column_idx
+  end
+
+  def rename_weight(change, next_change)
+    (JaroWinkler.distance "#{change[1]} #{change.last}", "#{next_change[1]} #{next_change.last}", ignore_case: true) >= 0.91
+  end
+
   def compare_sql(format)
     sql_out = []
     sql_files = Dir["sql/ddl/*#{format}*"].sort_by{ |f| File.birthtime(f) }[0...2]
@@ -94,7 +116,7 @@ task :alter_tables do
     sql_out << "-- #{format} schema"
     sql_out << "-- comparing: " + sql_files.to_s
     sql_out <<   "--------------------"
-    alter_tables_sql(changes).each do |type, changed|
+    alter_tables_sql(changes, old_ddl, new_ddl).each do |type, changed|
       sql_out <<   "-- #{type}"
       changed.each { |change| sql_out <<  "   #{change}" }
       sql_out << ""
@@ -103,5 +125,5 @@ task :alter_tables do
   end
 
   schemas = Dir["sql/ddl/*sql"].map{ |s| File.basename(s).split(/[._\-]/)[0] }.uniq.sort
-  schemas.each { |f| print compare_sql(f) + "\n" if ['canvas','caliper'].include? f }
+  schemas.each { |f| print compare_sql(f) + "\n" if ['canvas','caliper','custom'].include? f }
 end

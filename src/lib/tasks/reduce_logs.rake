@@ -25,7 +25,7 @@ task :reduce_logs do
   end
 
   def warnings_type_test(check)
-    schema = `git show HEAD:src/lib/schemas/canvas.rb`
+    schema = `git show HEAD:src/schemas/canvas.rb`
     size = schema.each_line.select { |line| line =~ /#{check}/ }
     size.uniq
   end

@@ -2,8 +2,9 @@ require 'yaml'
 
 task :create_tables do
 
-  DB_CFG = YAML.load_file('./cfg/database.yml')
+  #DB_CFG = YAML.load_file('./cfg/database.yml')
   adapter = DB_CFG['adapter']
+  # adapter = 'postgres'
   # the name of the schema/database name... might be 'dbo' for tinytds or whatever you named the db
   dbname = DB_CFG['data']
 
@@ -14,7 +15,7 @@ task :create_tables do
     tinytds:  'BIGINT IDENTITY(1,1) PRIMARY KEY'
   }
 
-  Dir.glob('./src/lib/schemas/*.rb') do |schema_hash|
+  Dir.glob('./src/schemas/*.rb') do |schema_hash|
     require schema_hash
     format = File.basename(schema_hash, ".rb")
     ddlout = []
@@ -50,7 +51,7 @@ task :create_tables do
               colout << "\t#{column} TEXT#{mysql_utf8}" 
             else
               coltype = [ 'tinytds' ].include?(adapter) && params[:mbstr] == true ? 'NVARCHAR' : 'VARCHAR'
-              colout << "\t#{column} #{coltype}(#{params[:size]})"
+              colout << "\t#{column} #{coltype.upcase}(#{params[:size]})"
             end
           when 'datetime'
             dtype = [ 'mysql2', 'tinytds' ].include?(adapter) ? 'DATETIME' : 'TIMESTAMP'
@@ -60,7 +61,7 @@ task :create_tables do
           else
             coltype = adapter != 'oracle' ? params[:type] : 'NUMBER'
             # size is set
-            colsize = !params[:size].nil? ? "\t#{column} #{coltype}(#{params[:size]})" : "\t#{column} #{coltype.upcase}"
+            colsize = !params[:size].nil? ? "\t#{column} #{coltype.upcase}(#{params[:size]})" : "\t#{column} #{coltype.upcase}"
             colout << colsize
           end
         end
