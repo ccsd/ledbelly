@@ -28,13 +28,17 @@ class LiveEvents
       if event_data['dataVersion'] == 'http://purl.imsglobal.org/ctx/caliper/v1p1'
                 
         # pass to parser
-        ims_caliper(event_name, event_time, event_data)
-      
+        event_parsed = _caliper(event_name, event_data)
+        # import to db
+        import(event_name, event_time, event_data, event_parsed)
+
       # handle canvas raw
       else
 
-        # pass to parser
-        canvas_raw(event_name, event_time, event_data)
+        # parse event data
+        event_parsed = _canvas(event_data)
+        # import to db
+        import(event_name, event_time, event_data, event_parsed)
 
         # extras
         live_stream(event_name, event_time, event_data)
@@ -46,9 +50,9 @@ class LiveEvents
     end
   end
 
-  def import(event_name, event_time, event_data, import_data, caliper = false)
+  def import(event_name, event_time, event_data, import_data)
 
-    event_source = caliper == false ? 'live' : 'ims'
+    event_source = event_data.dig('dataVersion').nil? ? 'live' : 'ims'
     event_table = "#{event_source}_#{event_name}".gsub(/[^\w\s]/, '_')
 
     # passively truncate strings to DDL length, keeps data insertion, logs warning for manual update
@@ -94,8 +98,14 @@ class LiveEvents
         # multi-byte strings
         v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size] * 2).to_s  
       else
-        # regular string
-        v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size]).to_s
+        begin
+          # regular string
+          v.mb_chars.limit(EVENT_DDL[event_table.to_sym][k][:size]).to_s
+        rescue => e
+          puts EVENT_DDL[event_table.to_sym][k]
+          puts e
+          puts "########{event_table}"
+        end
       end
 
       next unless import_data[k].mb_chars.length > v.mb_chars.length
@@ -131,7 +141,7 @@ class LiveEvents
     open('log/sql-recovery.log', 'a') { |f| f << "#{exp.sql};\n" }
 
     if exp.message.match? Regexp.union(WARN_ERRORS)
-      warn "#{event_name} #{exp.message}"
+      warn "#{exp.message} (#{event_name})"
     end
 
     if exp.message.match? Regexp.union(DISCONNECT_ERRORS)
@@ -145,28 +155,6 @@ class LiveEvents
       shoryuken_pid = File.read('log/shoryuken.pid').to_i
       Process.kill('TERM', shoryuken_pid)
     end
-  end
-
-  def collect_unknown(event_name, event_data)
-    puts "unexpected event: #{event_name}"
-    # send message to another queue for caching...?
-    puts 'storing event data in moo queue'
-    begin
-      LiveEvents.perform_async(event_data, queue: "#{SQS_CFG['queues'][0]}-moo")
-    rescue => e
-      puts e
-      puts 'moo queue failed, saving payload to file'
-      puts event_data
-      # write event and payload to file
-      open('log/payload-cache.js', 'a') do |f|
-        f << "\n//#{event_name}\n"
-        f << event_data.to_json
-      end
-    end
-  end
-
-  def default_timezone(string)
-    Time.parse(string).utc.strftime(TIME_FORMAT).to_s unless string.nil?
   end
 
 end

@@ -25,18 +25,25 @@ DB = Sequel.connect(
   user: DB_CFG['user'],
   password: DB_CFG['pass'],
   max_connections: DB_CFG['max_connections'],
-  encoding: 'utf8', # mssql
-  # charset: 'utf8mb4', # mysql
-  timeout: 180,
+  encoding: 'utf8', # encoding works for tinytds, mysql2, and postgres adapters (whereas charset is mysql specific)
+  # tinytds = 'utf8', mysql = 'utf8mb4', oracle = 'AL32UTF8', postgres = 'UTF8'
+  timeout: 600,
   pool_timeout: 45,
   # this will log every single transactions statement, results in very large files
   # logger: Logger.new('log/database.log', 'daily')
 )
+# The connection_validator extension modifies a database's
+# connection pool to validate that connections checked out
+# from the pool are still valid, before yielding them for use
+DB.extension :connection_validator
+# DB.pool.connection_validation_timeout = DB_CFG['timeout']
+
 # Sequel error extension 
 DB.extension :error_sql
 # convert table and column names to downcase
 DB.extension :identifier_mangling
 DB.identifier_input_method = :downcase
+# https://github.com/jeremyevans/sequel/blob/master/doc/opening_databases.rdoc#tinytds
 if DB_CFG['adapter'] == 'tinytds'
   DB.run("SET ANSI_WARNINGS ON;")
 end
@@ -60,6 +67,7 @@ WARN_ERRORS = [
   'table or view does not exist', # missing table
   'invalid identifier', # missing column
   # postgres
+  'UndefinedColumn',
   # 'relation "afd" does not exist' # relation "" does not exist
   # 'column "sdf" does not exist' # column "" does not exist
   # tinytds
@@ -71,7 +79,8 @@ WARN_ERRORS = [
 # broad errors worthy of disconnecting, to preserve messages in the queue
 DISCONNECT_ERRORS = [
   # mysql
-  'ConnectionError: MySQL server has gone away',
+  'MySQL server has gone away',
+  'Lost connection to MySQL server during query',
   # oracle
   # postgres
   # tinytds
@@ -85,4 +94,12 @@ DISCONNECT_ERRORS = [
   'Unable to connect: Adaptive Server is unavailable or does not exist',
   'Write to the server failed',
   'Cannot open user default database. Login failed.'
+].freeze
+
+# broad errors worthy of disconnecting, to preserve messages in the queue
+IDLE_ERRORS = [
+  # tinytds
+  # 'is being recovered. Waiting until recovery is finished',
+  # 'because the database replica is not in the PRIMARY or SECONDARY role',
+  # 'is participating in an availability group and is currently not accessible for queries'
 ].freeze

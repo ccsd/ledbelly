@@ -1,3 +1,7 @@
+def default_timezone(string)
+  Time.parse(string).utc.strftime(TIME_FORMAT).to_s unless string.nil?
+end
+
 # flattens the nested/recursive data structure of events to underscore_notation
 def _flatten(data, recursive_key = '')
   data.each_with_object({}) do |(k, v), ret|
@@ -26,6 +30,24 @@ def _squish(hash)
     k = k.gsub(/extensions|com|instructure|canvas/, '').gsub(/_+/, '_').gsub(/^_/, '').downcase
     ret[k] = v
   end
+end
+
+def collect_unknown(event_name, event_data)
+  puts "unexpected event: #{event_name}"
+  # # send message to another queue for caching...?
+  # puts 'storing event data in moo queue'
+  # begin
+  #   LiveEvents.perform_async(event_data, queue: "#{SQS_CFG['queues'][0]}-moo")
+  # rescue => e
+    #puts e
+    #puts 'moo queue failed, saving payload to file'
+    #puts event_data
+    # write event and payload to file
+    open('log/payload-cache.js', 'a') do |f|
+      f << "\n//#{event_name}\n"
+      f << event_data.to_json
+    end
+  # end
 end
 
 # counts the fields sent with caliper event to what is expected, log if something was missed

@@ -2,7 +2,8 @@
 module CanvasRawEvents
 
   # collect and return all possible message data fields
-  def metadata(meta)
+  def _metadata(event_data)
+    meta = event_data['metadata']
     {
       client_ip:              meta['client_ip']&.to_s,
       context_account_id:     meta['context_account_id']&.to_i,
@@ -32,16 +33,14 @@ module CanvasRawEvents
       user_id_meta:           meta['user_id']&.to_i,
       user_login_meta:        meta['user_login']&.to_s,
       user_sis_id_meta:       meta['user_sis_id']&.to_s,
-    }
+    }.compact
   end
   
-  def canvas_raw(event_name, event_time, event_data)
+  def _bodydata(event_data)
 
-    metadata = metadata(event_data['metadata']).compact
+    event_name = event_data.dig("metadata", "event_name")
     body = event_data['body']
-
-    missing_meta(event_data, metadata)
-
+  
     case event_name
     
     when 'account_notification_created'
@@ -1331,11 +1330,20 @@ module CanvasRawEvents
       return
     end
 
-    # merge metadata and bodydata, prevent duplicate fields
-    import_data = metadata.merge!(bodydata)
-    # import to db
-    import(event_name, event_time, event_data, import_data, false)
+    # return parsed event bodydata
+    bodydata
+  end
+
+  def _canvas(event_data)
+    meta = _metadata(event_data)
+    body = _bodydata(event_data)
+
     # check if we missed any new data
-    missing_body(event_data, bodydata)
+    missing_meta(event_data, meta)
+    missing_body(event_data, body)
+
+    # merge metadata and bodydata, prevent duplicate fields
+    # return event data - parsed, flattened, ready for sql
+    meta.merge!(body)
   end
 end

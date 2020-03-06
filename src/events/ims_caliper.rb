@@ -1,67 +1,8 @@
 module IMSCaliperEvents
 
-  # flattens the nested/recursive data structure of IMS Caliper events to underscore_notation
-  def _flatten(data, recursive_key = '')
-    data.each_with_object({}) do |(k, v), ret|
-      key = recursive_key + k.to_s
-      key = key.gsub(/[^a-zA-Z]/, '_')
-      if v.is_a? Hash
-        ret.merge! _flatten(v, key + '_')
-      elsif v.is_a? Array
-        v.each do |x|
-          if x.is_a? String
-            ret[key] = v.join(',')
-          else 
-            ret.merge! _flatten(x, key + '_')
-          end
-        end
-      else
-        ret[key] = v
-      end
-    end
-  end
-
-  # reduces underscore notation, removing overly verbose strings
-  def _squish(hash)
-    hash = _flatten(hash)
-    hash.each_with_object({}) do |(k, v), ret|
-      k = k.gsub(/extensions|com|instructure|canvas/, '').gsub(/_+/, '_').gsub(/^_/, '').downcase
-      ret[k] = v
-    end
-  end
-  
-  def caliper_count(event_name, sent, expected)
-    
-    # original hash, cloned, compact (no nil), strings, keys
-    copy_sent = sent.clone.compact.stringify_keys.keys
-    copy_expected = expected.clone.stringify_keys.keys
-    
-    # what's missing, get the difference
-    missing = copy_sent - copy_expected # | copy_expected - copy_sent
-    missing = missing.reject { |k| ['id'].include? k }
-    if missing.size.positive?
-      sample = missing.map { |k| "#{k}:::#{sent.fetch(k)}"}
-      err = <<~ERRLOG
-          event_name: ims_#{event_name}
-          count: { sent: #{sent.keys.count}, defined: #{copy_expected.count} }
-          summary: { event_name: ims_#{event_name}, undefined: #{missing.to_s.gsub('"', '')} }
-          sample: { event_name: ims_#{event_name}, undefined: #{sample} }
-          message: #{sent.to_json}
-
-      ERRLOG
-      # store in log file
-      open('log/ddl-undefined.log', 'a') do |f|
-        f << err
-      end
-      puts err if $stdout.isatty
-    end
-  end
-
   # handle ims caliper
-  def ims_caliper(event_name, event_time, event_data)
+  def _imsdata(event_name, data)
     
-    data = _squish(event_data['data'][0])
-
     common = {
       uuid:                           data['id']&.to_s,
       action:                         data['action']&.to_s,
@@ -396,12 +337,19 @@ module IMSCaliperEvents
       return
     end
 
+    # return parsed event data
     # merge the common fields with the event specific data
-    import_data = specific.merge(common)
-    # import to db
-    import(event_name, event_time, event_data, import_data, true)
+    specific.merge(common)
+  end
+
+  def _caliper(event_name, event_data)
+    data = _squish(event_data['data'][0])
+    imsdata = _imsdata(event_name, data)
+
     # check if we missed any new data
-    # bodycount(event_data, bodydata)
-    caliper_count(event_name, data, import_data)
+    caliper_count(event_name, data, imsdata)
+
+    # return event data - parsed, flattened, ready for sql
+    imsdata
   end
 end
