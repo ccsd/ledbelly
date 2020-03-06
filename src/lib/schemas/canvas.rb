@@ -1671,6 +1671,7 @@ $schema = {
     context_role_meta: { type: 'string', size: 24 },
     context_sis_source_id: { type: 'string', size: 64 },
     context_type_meta: { type: 'string', size: 24 },
+    developer_key_id: { type: 'bigint' },
     event_name: { type: 'string', size: 31 },
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
@@ -2231,6 +2232,7 @@ $schema = {
     event_time: { type: 'datetime' },
     # body
     assignment_resource_link_id: { type: 'string', size: 40 },
+    assignment_id: { type: 'bigint' },
     assignment_title: { type: 'string', size: 255, mbstr: true },
     assignment_context_title: { type: 'string', size: 255, mbstr: true },
     assignment_course_uuid: { type: 'string', size: 40 },

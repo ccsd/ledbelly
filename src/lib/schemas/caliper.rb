@@ -55,7 +55,7 @@ $schema = {
     object_display_name: { type: 'string', size: 'MAX', mbstr: true },
     object_domain: { type: 'string', size: 255 },
     object_filename: { type: 'string', size: 'MAX', mbstr: true },
-    object_http_method: { type: 'string', size: 4 },
+    object_http_method: { type: 'string', size: 7 },
     object_url: { type: 'string', size: 'MAX' },
   },
 

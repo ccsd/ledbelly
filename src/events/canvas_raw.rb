@@ -753,6 +753,7 @@ module CanvasRawEvents
       }
 
     when 'plagiarism_resubmit'
+      
       bodydata = {
         submission_id:      body['submission_id']&.to_i,
         assignment_id:      body['assignment_id']&.to_i,
@@ -777,6 +778,7 @@ module CanvasRawEvents
 
       bodydata = {
         assignment_resource_link_id:  body['assignment']['resource_link_id'].nil? ? nil : body['assignment']['resource_link_id'].to_s,
+        assignment_id:                body['assignment']['assignment_id'].nil? ? nil : body['assignment']['assignment_id'].to_i,
         assignment_title:             body['assignment']['title'].nil? ? nil : body['assignment']['title'].to_s,
         assignment_context_title:     body['assignment']['context_title'].nil? ? nil : body['assignment']['context_title'].to_s,
         assignment_course_uuid:       body['assignment']['course_uuid'].nil? ? nil : body['assignment']['course_uuid'].to_s,
