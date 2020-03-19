@@ -7,18 +7,22 @@ def _flatten(data, recursive_key = '')
   data.each_with_object({}) do |(k, v), ret|
     key = recursive_key + k.to_s
     key = key.gsub(/[^a-zA-Z]/, '_')
-    if v.is_a? Hash
-      ret.merge! _flatten(v, key + '_')
-    elsif v.is_a? Array
-      v.each do |x|
-        if x.is_a? String
-          ret[key] = v.join(',')
-        else 
-          ret.merge! _flatten(x, key + '_')
+    begin
+      if v.is_a? Hash
+        ret.merge! _flatten(v, key + '_')
+      elsif v.is_a? Array
+        v.each do |x|
+          if x.is_a? String
+            ret[key] = v.join(',')
+          else 
+            ret.merge! _flatten(x, key + '_')
+          end
         end
+      else
+        ret[key] = v
       end
-    else
-      ret[key] = v
+    rescue
+      pp [v, v.class, v.size, v.length, v.empty?]
     end
   end
 end
@@ -123,7 +127,7 @@ def missing_body(event_data, bodydata)
   flag = true if differs.size.positive?
 
   # compare data in nested events
-  if flag == true
+  if flag == true && missing.any? {|k, v| edB[k].is_a? Hash}
     # add condition, if any missing element in the body is a hash
 
     # for each body key, store a similar value with the missing prefix removed
@@ -134,7 +138,7 @@ def missing_body(event_data, bodydata)
     # for each comparison set, if 1 item in the compare array is a match for an expected key, store the expected key to a new array
     # store missing keys to a different array
     found = []
-    compare.clone.each do |c|
+    compare&.clone.each do |c|
       c.each do |k|
         if bodydata.stringify_keys.keys.any? k
           found << k
@@ -194,7 +198,7 @@ def missing_body(event_data, bodydata)
   end
 
   if flag == true
-    sample = missing.map { |k| "#{k}:::#{edB.fetch(k)}" } if sample.length == 0
+    sample = missing&.map { |k| "#{k}:::#{edB.fetch(k)}" }
     err = <<~ERRLOG
         event_name: live_#{ed['metadata']['event_name']}
         count: { sent: #{edB.keys.count}, defined: #{bd.keys.count} }
