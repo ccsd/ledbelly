@@ -47,7 +47,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     version: { type: 'string', size: 12 },
     # specific
-    object_asset_name: { type: 'string', size: 1000 },
+    object_asset_name: { type: 'string', size: 2000 },
     object_asset_subtype: { type: 'string', size: 24 },
     object_asset_type: { type: 'string', size: 24 },
     object_context_account_id: { type: 'bigint' },

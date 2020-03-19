@@ -73,7 +73,7 @@ $schema = {
     user_sis_id_meta: { type: 'string', size: 32 },
     # body
     asset_id: { type: 'bigint' },
-    asset_name: { type: 'string', size: 1000 },
+    asset_name: { type: 'string', size: 2000 },
     asset_type: { type: 'string', size: 24 },
     asset_subtype: { type: 'string', size: 24 },
     category: { type: 'string', size: 24 },
@@ -474,6 +474,7 @@ $schema = {
     type: { type: 'string', size: 14 },
     workflow_state: { type: 'string', size: 7 },
     course_section_id: { type: 'int' },
+    group_id: { type: 'int' },
   },
 
   live_assignment_override_updated: {
@@ -518,6 +519,7 @@ $schema = {
     type: { type: 'string', size: 14 },
     workflow_state: { type: 'string', size: 7 },
     course_section_id: { type: 'int' },
+    group_id: { type: 'int' },
   },
 
   live_content_migration_completed: {

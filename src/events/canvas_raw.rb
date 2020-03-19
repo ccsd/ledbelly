@@ -161,6 +161,7 @@ module CanvasRawEvents
         type:                   body['type']&.to_s,
         workflow_state:         body['workflow_state']&.to_s,
         course_section_id:      body['course_section_id']&.to_s,
+        group_id:               body['group_id']&.to_i,
       }
 
     when 'assignment_override_updated'
@@ -176,6 +177,7 @@ module CanvasRawEvents
         type:                   body['type']&.to_s,
         workflow_state:         body['workflow_state']&.to_s,
         course_section_id:      body['course_section_id']&.to_s,
+        group_id:               body['group_id']&.to_i,
       }
 
     when 'attachment_created'
@@ -395,7 +397,7 @@ module CanvasRawEvents
         context_id:           body['context_id']&.to_i,
         context_type:         body['context_type']&.to_s,
         workflow_state:       body['workflow_state']&.to_s,
-        lock_at:              body['lock_at']&.to_s,
+        lock_at:              body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
         updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
     
@@ -410,7 +412,7 @@ module CanvasRawEvents
         context_id:           body['context_id']&.to_i,
         context_type:         body['context_type']&.to_s,
         workflow_state:       body['workflow_state']&.to_s,
-        lock_at:              body['lock_at']&.to_s,
+        lock_at:              body['lock_at'].nil? ? nil : default_timezone(body['lock_at']),
         updated_at:           body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
       }
 
