@@ -13,7 +13,7 @@ task :reduce_logs do
   def ddl_warnings
     updates = []
     open_log("log/ddl-warnings.log")&.each_line do |line|
-      if match = line.match(/(live_[a-z_]+).([a-z_]+)\s--\s(.*)/i)
+      if match = line.match(/((?:live_|ims_)[a-z_]+).([a-z_]+)\s--\s(.*)/i)
         event_name, column, value = match.captures
         sample = warnings_type_test(column)
         sample = sample.size == 1 ? sample.first.strip : 'too many choices'
