@@ -36,22 +36,31 @@ def _squish(hash)
   end
 end
 
+# send message to another queue for caching
 def collect_unknown(event_name, event_data)
-  puts "unexpected event: #{event_name}"
-  # # send message to another queue for caching...?
-  # puts 'storing event data in moo queue'
-  # begin
-  #   LiveEvents.perform_async(event_data, queue: "#{SQS_CFG['queues'][0]}-moo")
-  # rescue => e
-    #puts e
-    #puts 'moo queue failed, saving payload to file'
-    #puts event_data
-    # write event and payload to file
-    open('log/payload-cache.js', 'a') do |f|
-      f << "\n//#{event_name}\n"
-      f << event_data.to_json
-    end
-  # end
+  puts "unexpected event: #{event_name}\nstoring event data in #{SQS_CFG['queues'][0]}-moo queue"
+  message = { 
+    message_body: event_data.to_json,
+    message_attributes: {
+      event_name: {
+        string_value: event_name.to_s,
+        data_type: "String",
+      },
+      event_time: {
+        string_value: (event_data.dig('metadata', 'event_time') || event_data.dig('data', 0, 'eventTime')).to_s,
+        data_type: "String",
+      },
+    }
+  }
+  Shoryuken::Client.queues("#{SQS_CFG['queues'][0]}-moo").send_message(message)
+  # LiveEvents.perform_async(event_data, queue: "#{SQS_CFG['queues'][0]}-moo")
+rescue => e
+  pp ['moo queue failed, saving payload to file', e, event_name]
+  # write event and payload to file
+  open('log/payload-cache.js', 'a') do |f|
+    f << "\n//#{event_name}\n"
+    f << event_data.to_json
+  end
 end
 
 # counts the fields sent with caliper event to what is expected, log if something was missed
@@ -114,37 +123,34 @@ end
 def missing_body(event_data, bodydata)
 
   ed = event_data.clone
-  edB = ed['body']
   bd = bodydata.clone
   flag = false
 
   # flag if event body has more fields than we're expecting
-  missing = edB.stringify_keys.keys - bd.stringify_keys.keys
+  missing = ed['body'].stringify_keys.keys - bd.stringify_keys.keys
   flag = true if missing.size.positive?
   
-  # flag if there is a similar field in the metadata, but the value isn't the same
-  differs = missing.select { |k| bd[k] != ed['metadata'][k] }
-  flag = true if differs.size.positive?
+  # compare body fields to metadata fields, keep keys where the values are different
+  flag = true if missing.reject { |k| bd[k] == ed['metadata'][k] }.size.positive?
 
-  # compare data in nested events
-  if flag == true && missing.any? {|k, v| edB[k].is_a? Hash}
-    # add condition, if any missing element in the body is a hash
+  # compare data in deeply nested events
+  if flag == true && missing.any? {|k| ed['body'][k].is_a? Hash}
 
     # for each body key, store a similar value with the missing prefix removed
-    body_keys = _flatten(edB).keys
-    compare = body_keys.map { |k| [k, k.sub(Regexp.union(missing), '').sub(/^_/, '')] }
+    body_keys = _flatten(ed['body']).keys
+    compare = body_keys.map { |k| [k, k.sub(Regexp.union(missing), '').sub(/^_/, '')] } || []
 
     # for each comparison key, check it within the expected body keys
     # for each comparison set, if 1 item in the compare array is a match for an expected key, store the expected key to a new array
     # store missing keys to a different array
     found = []
-    compare&.clone.each do |c|
+    compare.clone.each do |c|
       c.each do |k|
-        if bodydata.stringify_keys.keys.any? k
-          found << k
-          # don't compare it again
-          compare.delete(c)
-        end
+        next unless bodydata.stringify_keys.keys.any? k
+
+        found << k
+        # don't compare it again
+        compare.delete(c)
       end
     end
 
@@ -158,7 +164,7 @@ def missing_body(event_data, bodydata)
       compare.each do |c|
         c.each do |k|
           # if the key is not found in the expected bodydata, collect it
-          missing_nested << k if !bodydata.stringify_keys.keys.any? k
+          missing_nested << k if bodydata.stringify_keys.keys.none? k
         end
       end
 
@@ -169,7 +175,7 @@ def missing_body(event_data, bodydata)
       missing_still = key_diff.clone
       key_diff.each do |k|
         bd.stringify_keys.keys.each do |dk|
-          missing_still.delete(k) if key_diff.any? (/^#{dk}/)
+          missing_still.delete(k) if key_diff.any?(/^#{dk}/)
         end
       end
 
@@ -177,8 +183,7 @@ def missing_body(event_data, bodydata)
         flag = false
       else
         missing = missing_still
-        _sample = _flatten(edB)
-        sample = missing.map { |k| "#{k}:::#{_sample.fetch(k)}" } 
+        deep_sample = missing.map { |k| "#{k}:::#{_flatten(ed['body']).fetch(k)}" } 
         # puts "missing still"
         # puts missing_still.count
 
@@ -198,10 +203,10 @@ def missing_body(event_data, bodydata)
   end
 
   if flag == true
-    sample = missing&.map { |k| "#{k}:::#{edB.fetch(k)}" }
+    sample = deep_sample || missing&.map { |k| "#{k}:::#{ed['body'].fetch(k)}" }
     err = <<~ERRLOG
         event_name: live_#{ed['metadata']['event_name']}
-        count: { sent: #{edB.keys.count}, defined: #{bd.keys.count} }
+        count: { sent: #{ed['body'].keys.count}, defined: #{bd.keys.count} }
         summary: { event_name: #{ed['metadata']['event_name']}, undefined: #{missing.to_s.gsub('"', '')} }
         sample: { event_name: #{ed['metadata']['event_name']}, undefined: #{sample} }
         message: #{ed.to_json}
