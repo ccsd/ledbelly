@@ -345,6 +345,7 @@ module IMSCaliperEvents
   def _caliper(event_name, event_data)
     data = _squish(event_data['data'][0])
     imsdata = _imsdata(event_name, data)
+    return if !body.is_a? Hash
 
     # check if we missed any new data
     caliper_count(event_name, data, imsdata)

@@ -34,19 +34,23 @@ class LiveEvents
                 
         # pass to parser
         event_parsed = _caliper(event_name, event_data)
-        # import to db
-        import(event_name, event_time, event_data, event_parsed)
-
+        if event_parsed.is_a?(Hash)
+          # import to db
+          import(event_name, event_time, event_data, event_parsed)
+        end
+        
       # handle canvas raw
       else
 
         # parse event data
         event_parsed = _canvas(event_data)
-        # import to db
-        import(event_name, event_time, event_data, event_parsed)
+        if event_parsed.is_a?(Hash)
+          # import to db
+          import(event_name, event_time, event_data, event_parsed)
+          # extras
+          live_stream(event_name, event_time, event_data)
+        end
 
-        # extras
-        live_stream(event_name, event_time, event_data)
       end
     rescue => e
       warn "#{event_name} #{default_timezone(event_time)}\n#{e}"

@@ -1,4 +1,3 @@
-
 module CanvasRawEvents
 
   # collect and return all possible message data fields
@@ -1341,6 +1340,7 @@ module CanvasRawEvents
   def _canvas(event_data)
     meta = _metadata(event_data)
     body = _bodydata(event_data)
+    return if !body.is_a? Hash
 
     # check if we missed any new data
     missing_meta(event_data, meta)
