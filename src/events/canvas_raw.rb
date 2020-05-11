@@ -247,6 +247,7 @@ module CanvasRawEvents
         requirement_completed_count:  body['progress']['requirement_completed_count'].nil? ? nil : body['progress']['requirement_completed_count'].to_i,
         next_requirement_url:         body['progress']['next_requirement_url'].nil? ? nil : body['progress']['next_requirement_url'].to_s,
         completed_at:                 body['progress']['completed_at'].nil? ? nil : default_timezone(body['progress']['completed_at']),
+        error_message:                body['progress'].key?('error') ? body['progress']['error']['message'].to_s : nil,
         # body user
         user_id:                      body['user']['id'].nil? ? nil : body['user']['id'].to_i,
         user_name:                    body['user']['name'].nil? ? nil : body['user']['name'].to_s,
