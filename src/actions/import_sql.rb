@@ -74,6 +74,8 @@ module SQLInsertEvent
     # create a log entry
     err = %W[
       ---#{event_name}---\n
+      ------ time
+      at: #{import_data['processed_at']} event_time: #{event_time}\n
       #{exp.message}\n
       ------\n
       #{exp.sql}\n
@@ -89,6 +91,7 @@ module SQLInsertEvent
     # drop the failed SQL statement into a file
     # we can use this file to import the records later
     open('log/sql-recovery.log', 'a') { |f| f << "#{exp.sql};\n" }
+    open('log/sql-recovery.json', 'a') { |f| f << "#{event_data}\n" }
 
     if exp.message.match? Regexp.union(WARN_ERRORS)
       warn "#{exp.message} (#{event_name})"
