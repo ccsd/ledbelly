@@ -121,7 +121,6 @@ module CanvasRawEvents
         assignment_group_id:   body['assignment_group_id']&.to_i,
         context_id:            body['context_id']&.to_i,
         context_type:          body['context_type']&.to_s,
-        context_role:          body['context_role']&.to_s,
         name:                  body['name']&.to_s,
         position:              body['position']&.to_i,
         group_weight:          body['group_weight']&.to_f,
@@ -137,7 +136,6 @@ module CanvasRawEvents
         assignment_group_id:   body['assignment_group_id']&.to_i,
         context_id:            body['context_id']&.to_i,
         context_type:          body['context_type']&.to_s,
-        context_role:          body['context_role']&.to_s,
         name:                  body['name']&.to_s,
         position:              body['position']&.to_i,
         group_weight:          body['group_weight']&.to_f,
@@ -237,6 +235,22 @@ module CanvasRawEvents
         lti_context_id:       body['lti_context_id']&.to_s,
         context_uuid:         body['context_uuid']&.to_s,
         import_quizzes_next:  body['import_quizzes_next']&.to_s,
+      }
+    
+    when 'conversation_created'
+      
+      bodydata = {
+        conversation_id:  body['conversation_id']&.to_i,
+        updated_at:       body['updated_at'].nil? ? nil : default_timezone(body['updated_at']),
+      }
+    
+    when 'conversation_message_created'
+      
+      bodydata = {
+        author_id:        body['author_id']&.to_i,
+        conversation_id:  body['conversation_id']&.to_i,
+        message_id:       body['message_id']&.to_i,
+        created_at:       body['created_at'].nil? ? nil : default_timezone(body['created_at']),
       }
 
     when 'course_completed'
