@@ -269,6 +269,8 @@ module CanvasRawEvents
         # body course
         course_id:                    body['course']['id'].nil? ? nil : body['course']['id'].to_i,
         course_name:                  body['course']['name'].nil? ? nil : body['course']['name'].to_s,
+        account_id:                   body['course']['account_id'].nil? ? nil : body['course']['account_id'].to_i,
+        sis_source_id:                body['course']['sis_source_id'].nil? ? nil : body['course']['sis_source_id'].to_s,
       }
 
     when 'course_created'
@@ -317,6 +319,8 @@ module CanvasRawEvents
         # body course
         course_id:                    body['course']['id'].nil? ? nil : body['course']['id'].to_i,
         course_name:                  body['course']['name'].nil? ? nil : body['course']['name'].to_s,
+        account_id:                   body['course']['account_id'].nil? ? nil : body['course']['account_id'].to_i,
+        sis_source_id:                body['course']['sis_source_id'].nil? ? nil : body['course']['sis_source_id'].to_s,
       }      
 
     when 'course_section_created'

@@ -680,6 +680,8 @@ $schema = {
     # body course
     course_id: { type: 'int' },
     course_name: { type: 'string', size: 255 },
+    course_account_id: { type: 'int' },
+    course_sis_source_id: { type: 'string', size: 32 },
   },
 
   live_course_created: {
@@ -822,6 +824,8 @@ $schema = {
     # body course
     course_id: { type: 'int' },
     course_name: { type: 'string', size: 255 },
+    course_account_id: { type: 'int' },
+    course_sis_source_id: { type: 'string', size: 32 },
   },
 
   live_course_section_created: {
