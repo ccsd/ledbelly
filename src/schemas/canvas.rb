@@ -29,7 +29,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     account_notification_id: { type: 'bigint' },
     subject: { type: 'string', size: 255 },
@@ -70,7 +70,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     asset_id: { type: 'bigint' },
     asset_name: { type: 'string', size: 2000 },
@@ -120,7 +120,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -174,7 +174,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -228,7 +228,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_group_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -274,7 +274,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_group_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -321,7 +321,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     attachment_id: { type: 'bigint' },
     user_id: { type: 'bigint' },
@@ -334,6 +334,7 @@ $schema = {
     unlock_at: { type: 'datetime' },
     lock_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
+    associated_integration_id: { type: 'string', size: 255 }
   },
 
   live_attachment_deleted: {
@@ -369,7 +370,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     attachment_id: { type: 'bigint' },
     user_id: { type: 'bigint' },
@@ -416,7 +417,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     attachment_id: { type: 'bigint' },
     user_id: { type: 'bigint' },
@@ -452,6 +453,7 @@ $schema = {
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     referrer: { type: 'string', size: 'MAX' },
     request_id: { type: 'string', size: 36 },
     root_account_id_meta: { type: 'bigint' },
@@ -464,7 +466,7 @@ $schema = {
     user_agent: { type: 'string', size: 300 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_override_id: { type: 'int' },
     assignment_id: { type: 'int' },
@@ -499,6 +501,7 @@ $schema = {
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     referrer: { type: 'string', size: 'MAX' },
     request_id: { type: 'string', size: 36 },
     root_account_id_meta: { type: 'bigint' },
@@ -511,7 +514,7 @@ $schema = {
     user_agent: { type: 'string', size: 300 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     assignment_override_id: { type: 'int' },
     assignment_id: { type: 'int' },
@@ -586,7 +589,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     conversation_id: { type: 'int' },
     updated_at: { type: 'datetime' },
@@ -625,7 +628,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     author_id: { type: 'int' },
     conversation_id: { type: 'int' },
@@ -666,7 +669,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body progress
     requirement_count: { type: 'int' },
     requirement_completed_count: { type: 'int' },
@@ -716,7 +719,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     course_id: { type: 'bigint' },
     uuid: { type: 'string', size: 40 },
@@ -760,7 +763,7 @@ $schema = {
     # user_agent: { type: 'string', size: 512 },
     # user_id_meta: { type: 'bigint' },
     # user_login_meta: { type: 'string', size: 64 },
-    # user_sis_id_meta: { type: 'string', size: 32 },
+    # user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     course_id: { type: 'bigint' },
@@ -810,7 +813,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body progress
     error_message: { type: 'string', size: 255 },
     requirement_count: { type: 'int' },
@@ -860,7 +863,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     course_section_id: { type: 'int' },
     sis_source_id: { type: 'string', size: 32 },
@@ -913,7 +916,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     course_section_id: { type: 'int' },
     sis_source_id: { type: 'string', size: 32 },
@@ -967,7 +970,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     course_id: { type: 'bigint' },
     account_id: { type: 'bigint' },
@@ -1009,7 +1012,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     created_at: { type: 'datetime' },
@@ -1051,7 +1054,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     created_at: { type: 'datetime' },
@@ -1096,7 +1099,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     discussion_topic_id: { type: 'bigint' },
     is_announcement: { type: 'string', size: 5 },
@@ -1130,6 +1133,7 @@ $schema = {
     job_id: { type: 'bigint' },
     job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
+    real_user_id: { type: 'bigint' },
     request_id: { type: 'string', size: 36 },
     root_account_id_meta: { type: 'bigint' },
     root_account_lti_guid: { type: 'string', size: 100 },
@@ -1142,7 +1146,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     discussion_topic_id: { type: 'bigint' },
     is_announcement: { type: 'string', size: 5 },
@@ -1189,7 +1193,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     enrollment_id: { type: 'bigint' },
     course_id: { type: 'bigint' },
@@ -1237,7 +1241,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     enrollment_id: { type: 'bigint' },
     state: { type: 'string', size: 16 },
@@ -1285,7 +1289,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     enrollment_id: { type: 'bigint' },
     state: { type: 'string', size: 16 },
@@ -1333,7 +1337,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     enrollment_id: { type: 'bigint' },
     course_id: { type: 'bigint' },
@@ -1381,7 +1385,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
@@ -1432,7 +1436,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
@@ -1472,7 +1476,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
@@ -1514,7 +1518,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
@@ -1558,7 +1562,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_membership_id: { type: 'bigint' },
     user_id: { type: 'bigint' },
@@ -1598,7 +1602,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_membership_id: { type: 'bigint' },
     user_id: { type: 'bigint' },
@@ -1642,7 +1646,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     group_category_id: { type: 'bigint' },
     group_category_name: { type: 'string', size: 255 },
@@ -1687,7 +1691,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -1738,13 +1742,13 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_group_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
     context_type: { type: 'string', size: 24 },
     title: { type: 'string', size: 255 },
-    description: { type: 'string', size: 2000 },
+    description: { type: 'string', size: 'MAX' },
     vendor_guid: { type: 'string', size: 100 },
     parent_outcome_group_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 6 },
@@ -1782,13 +1786,13 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_group_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
     context_type: { type: 'string', size: 24 },
     title: { type: 'string', size: 255 },
-    description: { type: 'string', size: 2000 },
+    description: { type: 'string', size: 'MAX' },
     vendor_guid: { type: 'string', size: 100 },
     parent_outcome_group_id: { type: 'bigint' },
     workflow_state: { type: 'string', size: 7 },
@@ -1826,7 +1830,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_link_id: { type: 'bigint' },
     learning_outcome_id: { type: 'bigint' },
@@ -1852,6 +1856,8 @@ $schema = {
     event_time: { type: 'datetime' },
     hostname: { type: 'string', size: 64 },
     http_method: { type: 'string', size: 7 },
+    job_id: { type: 'bigint' },
+    job_tag: { type: 'string', size: 100 },
     producer: { type: 'string', size: 12 },
     request_id: { type: 'string', size: 36 },
     root_account_id_meta: { type: 'bigint' },
@@ -1865,7 +1871,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_link_id: { type: 'bigint' },
     learning_outcome_id: { type: 'bigint' },
@@ -1906,7 +1912,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_id: { type: 'bigint' },
     mastery: { type: 'string', size: 5 },
@@ -1952,7 +1958,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_id: { type: 'bigint' },
     mastery: { type: 'string', size: 5 },
@@ -2000,7 +2006,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     learning_outcome_id: { type: 'bigint' },
     context_id: { type: 'bigint' },
@@ -2012,7 +2018,7 @@ $schema = {
     calculation_method: { type: 'string', size: 255 },
     calculation_int: { type: 'int' },
     rubric_criterion_description: { type: 'string', size: 255 },
-    rubric_criterion_ratings: { type: 'string', size: 1000 },
+    rubric_criterion_ratings: { type: 'string', size: 2000 },
     rubric_criterion_mastery_points: { type: 'float', size: 53 },
     rubric_criterion_points_possible: { type: 'float', size: 53 },
     title: { type: 'string', size: 255 },
@@ -2045,7 +2051,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     redirect_url: { type: 'string', size: 'MAX' },
   },
@@ -2075,7 +2081,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
   },
 
   live_module_created: {
@@ -2111,7 +2117,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     module_id: { type: 'int' },
     context_id: { type: 'bigint' },
@@ -2154,7 +2160,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     module_item_id: { type: 'int' },
     module_id: { type: 'int' },
@@ -2197,7 +2203,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     module_item_id: { type: 'int' },
     module_id: { type: 'int' },
@@ -2240,7 +2246,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     module_id: { type: 'int' },
     context_id: { type: 'bigint' },
@@ -2279,7 +2285,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
@@ -2361,7 +2367,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_id: { type: 'bigint' },
     quiz_id: { type: 'bigint' },
@@ -2379,7 +2385,7 @@ $schema = {
     root_account_uuid: { type: 'string', size: 40 },
     # body
     id: { type: 'int' },
-    title: { type: 'string', size: 1024, mbstr: true },
+    title: { type: 'string', size: 'MAX' },
     label: { type: 'string', size: 255 },
     item_body: { type: 'string', size: 'MAX' },
     properties_rich_content_editor: { type: 'string', size: 255 },
@@ -2857,7 +2863,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     # body
     id: { type: 'int' },
-    title: { type: 'string', size: 1024, mbstr: true },
+    title: { type: 'string', size: 'MAX' },
     label: { type: 'string', size: 255 },
   },
 
@@ -2915,7 +2921,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     sis_batch_id: { type: 'string', size: 32 },
     account_id: { type: 'int' },
@@ -2954,7 +2960,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     sis_batch_id: { type: 'string', size: 32 },
     account_id: { type: 'int' },
@@ -2994,7 +3000,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_comment_id: { type: 'bigint' },
     submission_id: { type: 'bigint' },
@@ -3037,7 +3043,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
@@ -3091,7 +3097,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     submission_id: { type: 'bigint' },
     assignment_id: { type: 'bigint' },
@@ -3138,7 +3144,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     course_id: { type: 'bigint' },
     syllabus_body: { type: 'string', size: 'MAX' },
@@ -3178,7 +3184,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     account_id: { type: 'bigint' },
@@ -3221,7 +3227,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     uuid: { type: 'string', size: 40 },
@@ -3231,7 +3237,7 @@ $schema = {
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
     user_login: { type: 'string', size: 64 },
-    user_sis_id: { type: 'string', size: 32 },
+    user_sis_id: { type: 'string', size: 64 },
   },
 
   live_user_updated: {
@@ -3267,7 +3273,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     user_id: { type: 'bigint' },
     uuid: { type: 'string', size: 40 },
@@ -3277,7 +3283,7 @@ $schema = {
     created_at: { type: 'datetime' },
     updated_at: { type: 'datetime' },
     user_login: { type: 'string', size: 64 },
-    user_sis_id: { type: 'string', size: 32 },
+    user_sis_id: { type: 'string', size: 64 },
   },
 
   live_wiki_page_created: {
@@ -3313,7 +3319,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     wiki_page_id: { type: 'bigint' },
     title: { type: 'string', size: 255, mbstr: true },
@@ -3353,7 +3359,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     wiki_page_id: { type: 'bigint' },
     title: { type: 'string', size: 255, mbstr: true },
@@ -3392,7 +3398,7 @@ $schema = {
     user_agent: { type: 'string', size: 512 },
     user_id_meta: { type: 'bigint' },
     user_login_meta: { type: 'string', size: 64 },
-    user_sis_id_meta: { type: 'string', size: 32 },
+    user_sis_id_meta: { type: 'string', size: 64 },
     # body
     wiki_page_id: { type: 'bigint' },
     title: { type: 'string', size: 255, mbstr: true },
